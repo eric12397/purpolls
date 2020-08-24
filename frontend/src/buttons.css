@@ -1,0 +1,46 @@
+.custom-btn {
+  border: 0;
+  background: none;
+  display: block;
+  text-align: center;
+  padding: 14px 40px;
+  outline: none;
+  border-radius: 24px;
+  transition: 0.25s;
+  cursor: pointer
+}
+
+.purple-btn {
+  color: #943dff;
+  border: 2px solid #943dff;
+}
+.purple-btn:hover {
+  background: #943dff;
+  transition: all 0.3s ease;
+}
+.red-btn {
+  color: red;
+  border: 2px solid red;
+}
+
+.red-btn:hover {
+  background: red;
+  transition: all 0.3s ease;
+}
+
+.hover {
+  transition: all 0.25s ease;
+}
+
+.hover:hover {
+  cursor: pointer;
+  transform: scale(1.2)
+}
+
+.active {
+  transition: all 0.25s ease;
+}
+
+.active:active {
+  transform: scale(0.95)
+}

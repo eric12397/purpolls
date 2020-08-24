@@ -1,0 +1,23 @@
+[tooltip-text]:before {
+	content: attr(tooltip-text);
+	position: absolute;
+	opacity: 0;
+	z-index: 2;
+
+	/* customizable */
+	transition-delay: all 1s ease;
+	padding: 5px 10px;
+	color: #e1e1e1;
+	border-radius: 10px;
+	font-size: 11px;
+}
+
+[tooltip-text]:hover:before {
+    /* needed - do not touch */
+    opacity: 1;
+    
+    /* customizable */
+    background: #1a1a1a;
+    margin-top: -20px;
+    margin-left: 20px;    
+}

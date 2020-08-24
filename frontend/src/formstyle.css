@@ -1,0 +1,87 @@
+.poll-form input[type=text], input[type=password] {
+  padding: 10px;
+  width: 100%;
+  outline: none;
+  background: none;
+  color: #e1e1e1;
+  border: 2px solid grey;
+  border-radius: 24px;
+  padding-left: 15px;
+  transition: 0.25s
+}
+
+.poll-form input[type="text"]:focus,
+.poll-form input[type="password"]:focus {
+  border-color: #943dff
+}
+
+.poll-form input[name=choice] {
+  width: 75%;
+}
+
+.rounded-border  {
+  border: 2px solid grey;
+  border-radius: 10px;
+}
+
+.comment-form textarea {
+  color: #e1e1e1;
+  width: 100%;
+  height: 100px;
+  padding: .5rem;
+  outline: none;
+  background: none;
+  transition: 0.5s ease all;
+  
+}
+
+.comment-form textarea:focus {
+  border-color: #943dff;
+}
+
+.comment-form textarea:active {
+  transform: scale(0.95);
+}
+
+.form-container {
+    width: 100%;
+    padding: 40px;
+    background: #292929;
+    border: 0px;
+    border-radius: 15px;
+    box-shadow: 3px 3px 8px black;
+    position: absolute;
+    top: 50%;
+    text-align: center;
+    transition: 0.25s;
+    margin-top: 40px
+
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    border: 0;
+    background: none;
+    display: block;
+    margin: 15px auto;
+    text-align: center;
+    border: 2px solid grey;
+    padding: 10px 10px;
+    width: 80%;
+    outline: none;
+    color: #e1e1e1;
+    border-radius: 24px;
+    transition: 0.25s
+}
+
+.form-container input[type="text"]:focus,
+.form-container input[type="password"]:focus {
+    width: 90%;
+    border-color: #943dff
+}
+
+input[type="file"] {
+  display: none;
+}
+
+  

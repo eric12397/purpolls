@@ -1,0 +1,42 @@
+.choice-btn {
+  height: 4em;
+  width: 100%;
+  background-color: #fafcfc;
+  border: 2px solid #703e5d;
+  border-radius: 5px;
+  position: relative;
+}
+
+.choice-btn:hover {
+  background: #ebe4e4;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 95%;
+} 
+
+.choice-btn::before { 
+  content: attr(data-label);
+  font-size: 20px;
+  color: #703e5d;
+  position: absolute;
+  top: 16px;
+  left: 20px;
+}
+
+.bar {
+  background-color: #d9c5d7;
+  display: inline-block;
+  border-radius: 5px;
+  height: 100%;
+  width: 0;
+  transition: width 1s ease-in-out;
+}
+
+.result {
+  font-size: 20px;
+  color: #703e5d;
+  position: absolute;
+  top: 16px;
+  right: 20px;
+}
+
