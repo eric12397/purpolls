@@ -4,7 +4,7 @@ from .models import Poll, Choice, Vote, Like, Dislike
 from django.contrib.auth.models import User
 from .serializers import PollAndChoicesSerializer, ChoiceSerializer, VoteSerializer, LikeSerializer, DislikeSerializer
 from django.contrib.auth.decorators import login_required
-from rest_framework import permissions, status, generics
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -20,7 +20,7 @@ class PollDetailAPI(generics.DestroyAPIView):
 	queryset = Poll.objects.all()
 	serializer_class = PollAndChoicesSerializer
 	lookup_url_kwarg = "poll_id"
-	permission_classes = (IsAuthenticated, )
+	#permission_classes = (IsAuthenticated, )
 
 
 class PollVotesAPI(generics.ListAPIView):
@@ -48,7 +48,7 @@ class PollDislikesAPI(generics.ListAPIView):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def vote_poll(request, poll_id): 
 	if request.method == 'POST':
 		poll = Poll.objects.get(pk=poll_id)
@@ -71,7 +71,7 @@ def vote_poll(request, poll_id):
 	
 		
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def like_poll(request, poll_id):
 	user = User.objects.get(pk=request.data['user_id'])
 	poll = Poll.objects.get(pk=poll_id)
@@ -106,7 +106,7 @@ def like_poll(request, poll_id):
 
 
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def dislike_poll(request, poll_id):
 	user = User.objects.get(pk=request.data['user_id'])
 	poll = Poll.objects.get(pk=poll_id)

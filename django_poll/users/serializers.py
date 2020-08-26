@@ -1,13 +1,12 @@
 from rest_framework import serializers
-from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
 from .models import Profile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 def required(value):
-        if value is None:
-            raise serializers.ValidationError('This field is required')
+    if value is None:
+        raise serializers.ValidationError('This field is required')
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):

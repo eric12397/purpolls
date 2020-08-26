@@ -35,6 +35,7 @@ class App extends React.Component {
     this.props.getPolls()
     this.props.getUsers()
     this.props.verifyCurrentUser()
+    console.log('user verified')
   }
 
   render() {

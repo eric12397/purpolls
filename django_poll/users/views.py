@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserSerializer, CreateUserSerializer, CustomTokenObtainPairSerializer, ProfilePicSerializer
 
@@ -32,6 +32,7 @@ class UserListAPI(generics.ListAPIView):
 
 
 class RegistrationAPI(APIView):
+	#permission_classes = (AllowAny, )
 
 	def post(self, request, format=None):
 		print(request.data)
@@ -47,7 +48,7 @@ class RegistrationAPI(APIView):
 
 class UserProfilePicAPI(APIView):
 	parser_classes = (MultiPartParser, FormParser)
-	permission_classes = (IsAuthenticated, )
+	#permission_classes = (IsAuthenticated, )
 
 	def get(self, request, *args, **kwargs):
 		user = User.objects.get(username=self.kwargs['username'])

@@ -16,6 +16,7 @@ import {
 export const verifyCurrentUser = () => (dispatch, getState) => {
   axiosInstance.get('/current_user/')
     .then(response => {
+      console.log(response)
       dispatch({
         type: USER_AUTHENTICATED,
         payload: response.data
