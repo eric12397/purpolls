@@ -1,2 +1,2 @@
 # purpolls
-polling web app django/react
+polling web app using django backend and react frontend 
