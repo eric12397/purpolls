@@ -15,9 +15,8 @@ from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, '../frontend'))
 print("base dir path", BASE_DIR)
-print("frontend dir path", FRONTEND_DIR)
+
 
 
 
@@ -97,7 +96,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(FRONTEND_DIR, 'build')
+            os.path.join(BASE_DIR, 'build')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -164,7 +163,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(FRONTEND_DIR, 'build/static')
+    os.path.join(BASE_DIR, 'build/static')
 ]
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
