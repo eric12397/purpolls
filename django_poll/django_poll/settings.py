@@ -30,7 +30,7 @@ SECRET_KEY = '84-w4*%hh@%c9)&0srco5m%4t@g)+w^&9e@-&-*(%&dgebqdba'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ 'purpolls.herokuapp.com', '127.0.0.1:8000' ]
 
 
 # Application definition
@@ -166,6 +166,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(FRONTEND_DIR, 'build/static')
 ]
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # creates 'media' folder inside base_dir to store pics
 
