@@ -26,7 +26,7 @@ SECRET_KEY = '84-w4*%hh@%c9)&0srco5m%4t@g)+w^&9e@-&-*(%&dgebqdba'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'purpolls.herokuapp.com', '127.0.0.1:8000' ]
+ALLOWED_HOSTS = [ 'purpolls.herokuapp.com', 'localhost:8000' ]
 
 
 # Application definition
