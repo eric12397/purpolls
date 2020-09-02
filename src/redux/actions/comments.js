@@ -1,4 +1,3 @@
-import axios from "axios";
 import axiosInstance from '../../axiosInstance';
 import { getErrors } from './errors';
 import { 
@@ -14,7 +13,7 @@ import {
 } from "./types";
 
 export const getComments = pollId => (dispatch, getState) => {
-  axios.get(`http://localhost:8000/api/polls/${pollId}/comments/`)
+  axiosInstance.get(`/polls/${pollId}/comments/`)
     .then(response => {
       dispatch({
         type: GET_COMMENTS,
@@ -29,7 +28,7 @@ export const getComments = pollId => (dispatch, getState) => {
 
 export const addComment = (pollId, data) => (dispatch, getState) => {
   const { id: userId } = getState().auth.user
-  axiosInstance.post(`http://localhost:8000/api/polls/${pollId}/comments/`, {
+  axiosInstance.post(`/polls/${pollId}/comments/`, {
       poll_id: pollId,
       author: userId,
       comment_text: data.comment
@@ -47,7 +46,7 @@ export const addComment = (pollId, data) => (dispatch, getState) => {
 
 export const getUserCommentLikes = pollId => (dispatch, getState) => {
   const { id: userId } = getState().auth.user
-  axios.get(`http://localhost:8000/api/users/${userId}/polls/${pollId}/comment-likes/`)
+  axiosInstance.get(`/users/${userId}/polls/${pollId}/comment-likes/`)
     .then(response => {
       dispatch({
         type: GET_USER_COMMENT_LIKES,
@@ -59,7 +58,7 @@ export const getUserCommentLikes = pollId => (dispatch, getState) => {
 
 export const getUserCommentDislikes = pollId => (dispatch, getState) => {
   const { id: userId } = getState().auth.user
-  axios.get(`http://localhost:8000/api/users/${userId}/polls/${pollId}/comment-dislikes/`)
+  axiosInstance.get(`/users/${userId}/polls/${pollId}/comment-dislikes/`)
     .then(response => {
       dispatch({
         type: GET_USER_COMMENT_DISLIKES,
@@ -82,7 +81,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
   const commentDisliked = commentsDisliked[commentId]
   
   if (commentLiked === undefined && commentDisliked === undefined) {
-    axiosInstance.patch(`http://localhost:8000/api/comments/${commentId}/likes/`, {
+    axiosInstance.patch(`/comments/${commentId}/likes/`, {
       signal: 'add like',
       user_id: userId,
       poll_id: pollId,
@@ -97,7 +96,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
   }
 
   if (commentLiked === true && commentDisliked === undefined) {
-    axiosInstance.patch(`http://localhost:8000/api/comments/${commentId}/likes/`, {
+    axiosInstance.patch(`/comments/${commentId}/likes/`, {
       signal: 'remove like',
       user_id: userId,
       poll_id: pollId,
@@ -112,7 +111,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
   }
 
   if (commentLiked === undefined && commentDisliked === true) {
-    axiosInstance.patch(`http://localhost:8000/api/comments/${commentId}/likes/`, {
+    axiosInstance.patch(`/comments/${commentId}/likes/`, {
       signal: 'add like, remove dislike',
       user_id: userId,
       poll_id: pollId,
@@ -145,7 +144,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
   const commentDisliked = commentsDisliked[commentId]
 
   if (commentLiked === undefined && commentDisliked === undefined) {
-    axiosInstance.patch(`http://localhost:8000/api/comments/${commentId}/dislikes/`, {
+    axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
       signal: 'add dislike',
       user_id: userId,
       poll_id: pollId,
@@ -160,7 +159,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
   }
 
   if (commentLiked === undefined && commentDisliked === true) {
-    axiosInstance.patch(`http://localhost:8000/api/comments/${commentId}/dislikes/`, {
+    axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
       signal: 'remove dislike',
       user_id: userId,
       poll_id: pollId,
@@ -175,7 +174,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
   }
 
   if (commentLiked === true && commentDisliked === undefined) {
-    axiosInstance.patch(`http://localhost:8000/api/comments/${commentId}/dislikes/`, {
+    axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
       signal: 'add dislike, remove like',
       user_id: userId,
       poll_id: pollId,

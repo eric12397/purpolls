@@ -1,8 +1,8 @@
-import axios from "axios";
+import axiosInstance from '../../axiosInstance'
 import { GET_USERS, ADD_NEW_USER } from './types.js';
 
 export const getUsers = () => dispatch => {
-  axios.get('http://localhost:8000/api/users/')
+  axiosInstance.get('/users/')
     .then(response => {
       dispatch({
         type: GET_USERS,

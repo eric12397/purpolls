@@ -1,4 +1,3 @@
-import axios from "axios";
 import axiosInstance from '../../axiosInstance'
 import { createMessage } from './messages';
 import { getErrors } from './errors'
@@ -26,7 +25,7 @@ const setPollLikesAndDislikes = polls => {
 }
 
 export const getPolls = () => (dispatch, getState) => {
-  axios.get('http://localhost:8000/api/polls/')
+  axiosInstance.get('/polls/')
     .then(response => {
       dispatch({
         type: GET_POLLS,
@@ -54,7 +53,7 @@ export const deletePoll = (pollId, history) => dispatch => {
 
 export const addPoll = (data, history) => (dispatch, getState) => {
   const { id: userId } = getState().auth.user
-  axiosInstance.post('http://localhost:8000/api/polls/', {
+  axiosInstance.post('/polls/', {
     author: userId,
     question_text: data.question,
     choices: data.choices
@@ -96,7 +95,7 @@ export const handleVote = (choiceId, pollId, history) => (dispatch, getState) =>
 }
 
 export const getUserVotes = userId => dispatch => {
-  axios.get(`http://localhost:8000/api/users/${userId}/votes/`)
+  axiosInstance.get(`/users/${userId}/votes/`)
     .then(response => {
       dispatch({
         type: GET_USER_VOTES,
@@ -107,7 +106,7 @@ export const getUserVotes = userId => dispatch => {
 }
 
 export const getUserLikes = userId => dispatch => {
-  axios.get(`http://localhost:8000/api/users/${userId}/likes/`)
+  axiosInstance.get(`/users/${userId}/likes/`)
     .then(response => {
       dispatch({
         type: GET_USER_LIKES,
@@ -117,7 +116,7 @@ export const getUserLikes = userId => dispatch => {
 }
 
 export const getUserDislikes = userId => dispatch => {
-  axios.get(`http://localhost:8000/api/users/${userId}/dislikes/`)
+  axiosInstance.get(`/users/${userId}/dislikes/`)
     .then(response => {
       dispatch({
         type: GET_USER_DISLIKES,

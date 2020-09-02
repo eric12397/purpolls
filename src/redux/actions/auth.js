@@ -1,5 +1,4 @@
 import axiosInstance from '../../axiosInstance';
-import axios from 'axios';
 import { getUserVotes, getUserLikes, getUserDislikes } from './polls';
 import { getErrors } from './errors';
 import { createMessage } from './messages';
