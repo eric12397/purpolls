@@ -1,7 +1,6 @@
 import React from 'react'
 import moment from 'moment';
 import axios from 'axios';
-import axiosInstance from "../axiosInstance";
 import { motion } from 'framer-motion';
 import { connect } from 'react-redux';
 import { Row, Col } from 'reactstrap';
@@ -23,7 +22,8 @@ class UserProfile extends React.Component {
 
   componentDidMount() {
     const { username } = this.props.match.params;
-    axios.get(`http://localhost:8000/api/users/${username}/profile-pic-upload/`, {
+    const baseURL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
+    axios.get(`${baseURL}users/${username}/profile-pic-upload/`, {
       headers: {
         'Authorization' : localStorage.getItem('accessToken') ? "Bearer " + localStorage.getItem('accessToken') : null,
         'accept' : 'application/json',
@@ -38,8 +38,10 @@ class UserProfile extends React.Component {
     console.log(event.target.files)
     let formData = new FormData();
     formData.append('image', event.target.files[0]);
+
     const { username } = this.props.match.params;
-    axios.put(`http://localhost:8000/api/users/${username}/profile-pic-upload/`, formData, {
+    const baseURL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
+    axios.put(`${baseURL}users/${username}/profile-pic-upload/`, formData, {
       headers: {
         'Authorization' : localStorage.getItem('accessToken') ? "Bearer " + localStorage.getItem('accessToken') : null,
         'accept' : 'application/json',
