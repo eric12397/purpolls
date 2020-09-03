@@ -37,7 +37,7 @@ class Register extends React.Component {
         transition={{transition: 'linear'}}
       >
         <Row>
-          <Col sm="12" md={{ size: 6, offset: 3 }}>
+          <Col xs={{ size: 10, offset: 1 }} md={{ size: 6, offset: 3 }}>
             <Form
               className="form-container" 
               method="POST"

@@ -53,7 +53,7 @@ class CommentItem extends React.Component {
 }
 
 const commentTextFont = {
-  fontSize: '15px',
+  fontSize: '13px',
   fontFamily: 'Arial, sans-serif',
   fontWeight: '500'
 }

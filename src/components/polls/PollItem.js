@@ -55,15 +55,14 @@ class PollItem extends React.Component {
           vote={ this.props.vote } 
         />
 
-        <div style={{ float: 'left' }}>
-          <small>Total Votes: { totalVotes }</small>
-        </div>
-        <div style={{ float: 'right' }}>
-          <Link className="mr-2" to={`/polls/${id}`}>
-            <GoCommentDiscussion/>
+        <div style={{width:'100%', textAlign:'center'}}>
+          <small style={{ float: 'left'}}>Total Votes: { totalVotes }</small>
+          <Link style={{ float: 'right'}} to={`/polls/${id}`}>
+            <GoCommentDiscussion className="mr-2"/>
+            <small>{ totalComments.toLocaleString() }</small>
           </Link>
-          <small>{ totalComments.toLocaleString() }</small>
-        </div> 
+        </div>
+  
       </React.Fragment>
       
     )

@@ -44,7 +44,7 @@ class PollDetail extends React.Component {
     this.setState({ showModal: false })
   }
 
-  getNextPollId = () => {
+  getNextPoll = () => {
     const { polls } = this.props;
     const { id: pollId } = this.props.match.params
     const index = polls.findIndex(poll => poll.id === parseInt(pollId))
@@ -55,7 +55,7 @@ class PollDetail extends React.Component {
     }
   }
 
-  getPreviousPollId = () => {
+  getPreviousPoll = () => {
     const { polls } = this.props;
     const { id: pollId } = this.props.match.params
     const index = polls.findIndex(poll => poll.id === parseInt(pollId))
@@ -68,10 +68,7 @@ class PollDetail extends React.Component {
 
 	render() { 
     const poll = this.props.poll ? (
-      <article 
-        className="media content-section" 
-      >   
-        
+        <article className="media content-section" >   
           <div className="media-body">
             <div className="article-metadata">
               <small className="text-muted">posted by</small>
@@ -85,7 +82,7 @@ class PollDetail extends React.Component {
                 : '' }
             </div>
 
-            <h2>{ this.props.poll.question_text }</h2> 
+            <h3>{ this.props.poll.question_text }</h3> 
 
             { this.props.vote ? 
               <p> You selected "{ this.props.vote.choice_text }".</p> : ''} 
@@ -94,7 +91,7 @@ class PollDetail extends React.Component {
               <div style={ pageTransitionLeftBtn }>
                 <Link 
                   className="mr-2" 
-                  to={`/polls/${this.getPreviousPollId()}`}
+                  to={`/polls/${this.getPreviousPoll()}`}
                 >
                   <AiOutlineDoubleLeft />
                 </Link>
@@ -110,7 +107,7 @@ class PollDetail extends React.Component {
               <div style={ pageTransitionRightBtn }>
                 <Link 
                   className="mr-2" 
-                  to={`/polls/${this.getNextPollId()}`}
+                  to={`/polls/${this.getNextPoll()}`}
                 >
                   <AiOutlineDoubleRight />
                 </Link>
@@ -158,7 +155,7 @@ class PollDetail extends React.Component {
         transition={{transition: 'linear'}}
       >
       <Row>
-        <Col xs="12" md={{ size: 10, offset: 1 }}>
+        <Col xs={{ size: 10, offset: 1 }} md={{ size: 10, offset: 1 }}>
 				  { poll } 
         </Col>
       </Row>
@@ -182,7 +179,7 @@ const pageTransitionRightBtn = {
   display: 'block',
   fontSize: '35px',
   position: 'absolute',
-  right: '-80px',
+  right: '-55px',
   top: '30%',
   cursor: 'pointer'
 }
@@ -191,7 +188,7 @@ const pageTransitionLeftBtn = {
   display: 'block',
   fontSize: '35px',
   position: 'absolute',
-  left: '-75px',
+  left: '-45px',
   top: '30%',
   cursor: 'pointer'
 }
