@@ -3,15 +3,15 @@
   background: none;
   display: block;
   text-align: center;
-  padding: 14px 40px;
+  padding: 12px 40px;
+  width: 100%;
   outline: none;
-  border-radius: 24px;
   transition: 0.25s;
   cursor: pointer
 }
 
 .purple-btn {
-  color: #943dff;
+  color: #e1e1e1;
   border: 2px solid #943dff;
 }
 .purple-btn:hover {

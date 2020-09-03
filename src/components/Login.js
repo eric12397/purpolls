@@ -37,7 +37,7 @@ class Login extends React.Component {
       >
     	
         <Row>
-          <Col sm="12" md={{ size: 6, offset: 3 }}>
+          <Col xs="12" sm="12" md={{ size: 6, offset: 3 }}>
     				<Form 
               className="form-container"
               method="post" 

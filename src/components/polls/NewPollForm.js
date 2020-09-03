@@ -54,52 +54,52 @@ class NewPollForm extends React.Component {
       >
       <Row>
         <Col sm="12" md={{ size: 10, offset: 1 }}>
-          <div className="content-section">
-            <Form 
-              className="poll-form"
-              onSubmit={ this.handleSubmit  }>
-              <legend className="border-bottom mb-4">New Poll</legend>
+          
+          <Form 
+            className="poll-form content-section"
+            onSubmit={ this.handleSubmit  }>
+            <legend className="border-bottom mb-4">New Poll</legend>
 
-                <FormGroup className="mb-4 active">
-                  <input
-                    className="rounded-border"
-                    type="text" 
-                    name="question"
-                    placeholder="What would you like to ask?"
-                    onChange={ this.handleQuestion } 
-                  />
-                </FormGroup>
-
-                
-                { this.state.choices.map((field, index) => ( 
-                  <FormGroup key={ index } className="mb-4"> 
-                    <input
-                      className="rounded-border active"
-                      type="text" 
-                      name="choice"
-                      maxLength="20"
-                      placeholder={`Choice ${index + 1}`}
-                      onChange={ event => this.handleChoices(event, index) } 
-                    /> 
-                    <span
-                      style={{ cursor: 'pointer' }}
-                      className="ml-5" 
-                      onClick={ () => this.removeChoice(index) }>Remove</span>
-                  </FormGroup>  
-                  ))
-                }
-              
-                <FormGroup>
-                  <span 
-                    style={{ cursor: 'pointer' }} 
-                    onClick={ this.addChoice }>Add another choice</span>
-                </FormGroup>
-              <FormGroup>
-                <button className="btn custom-btn purple-btn" type="submit">Post</button>        
+              <FormGroup className="mb-4 active">
+                <input
+                  className="rounded-border"
+                  type="text" 
+                  name="question"
+                  placeholder="What would you like to ask?"
+                  onChange={ this.handleQuestion } 
+                />
               </FormGroup>
+
               
-            </Form>
-          </div>
+              { this.state.choices.map((field, index) => ( 
+                <FormGroup key={ index } className="mb-4"> 
+                  <input
+                    className="rounded-border active"
+                    type="text" 
+                    name="choice"
+                    maxLength="20"
+                    placeholder={`Choice ${index + 1}`}
+                    onChange={ event => this.handleChoices(event, index) } 
+                  /> 
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    className="ml-3" 
+                    onClick={ () => this.removeChoice(index) }>Remove</span>
+                </FormGroup>  
+                ))
+              }
+            
+              <FormGroup>
+                <span 
+                  style={{ cursor: 'pointer' }} 
+                  onClick={ this.addChoice }>Add another choice</span>
+              </FormGroup>
+            <FormGroup>
+              <button className="btn custom-btn purple-btn" type="submit">Post</button>        
+            </FormGroup>
+            
+          </Form>
+          
         </Col>
       </Row>
     </motion.div>
