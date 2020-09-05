@@ -25,9 +25,9 @@ class UserProfile extends React.Component {
     const baseURL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
     axios.get(`${baseURL}users/${username}/profile-pic-upload/`, {
       headers: {
-        'Authorization' : localStorage.getItem('accessToken') ? "Bearer " + localStorage.getItem('accessToken') : null,
-        'accept' : 'application/json',
-        'content-type': 'multipart/form-data'
+        //'Authorization' : localStorage.getItem('accessToken') ? "Bearer " + localStorage.getItem('accessToken') : null,
+        //'accept' : 'application/json',
+        'Content-Type': 'multipart/form-data'
 
       }
     })
@@ -45,7 +45,7 @@ class UserProfile extends React.Component {
       headers: {
         'Authorization' : localStorage.getItem('accessToken') ? "Bearer " + localStorage.getItem('accessToken') : null,
         'accept' : 'application/json',
-        'content-type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data'
       }
     })
       .then(response => {
@@ -68,7 +68,7 @@ class UserProfile extends React.Component {
       totalRenown -= poll.dislikes; 
     })
 
-    const userProfile = this.props.userProfile && this.state.image ? (
+    const userProfile = this.props.userProfile ? (
       <Row>
         <Col lg="4">
           <div className="content-section">
@@ -116,7 +116,7 @@ class UserProfile extends React.Component {
 
         <Col lg="8" >
           <div className="content-section">
-            <h2 className="mb-3">Your Polls</h2>
+            <h2 className="mb-3">{ this.props.userProfile.username }'s Polls</h2>
 
             { this.props.userPolls.map((poll, index) => {
                 let totalVotes = 0;
@@ -189,7 +189,7 @@ class UserProfile extends React.Component {
 
 const pollStatsContainer = {
   display: 'inline-block',
-  marginRight: '40px'
+  marginRight: '30px'
 }
 
 const userStatsContainer = {

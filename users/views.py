@@ -62,5 +62,6 @@ class UserProfilePicAPI(APIView):
 		serializer = ProfilePicSerializer(profile_pic, data=request.data)
 		if serializer.is_valid():
 			serializer.save()
+			print(serializer.data)
 			return Response(serializer.data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

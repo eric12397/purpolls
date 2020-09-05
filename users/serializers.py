@@ -44,7 +44,7 @@ class ProfilePicSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Profile
-        fields = ('image', 'user')
+        fields = ('image',)
 
     
 
