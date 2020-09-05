@@ -9,7 +9,7 @@ export class PollList extends React.Component {
     let polls = [];
 		this.props.polls.forEach(poll => {
       polls.push(
-        <Card key={ poll.id } className="content-section mb-4">
+        <Card key={ poll.id } className="content-section mb-2">
           <PollItem 
             poll={ poll }  
           />

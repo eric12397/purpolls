@@ -11,11 +11,11 @@
 }
 
 .purple-btn {
+  background: linear-gradient(120deg, rgba(148,61,255,1) 0%, rgba(157,67,168,1) 100%);
   color: #e1e1e1;
-  border: 2px solid #943dff;
+  border: 2px;
 }
 .purple-btn:hover {
-  background: #943dff;
   transition: all 0.3s ease;
 }
 .red-btn {

@@ -103,7 +103,7 @@ class UserProfile extends React.Component {
                 </Tooltip>
             </div>
 
-            <div style={ userStatsContainer }>
+            <div style={{display:"inline-block"}}>
               <small>Date joined</small>
               <div>
                 <AiOutlineForm/>
@@ -152,7 +152,7 @@ class UserProfile extends React.Component {
                         </div>
                       </div>
 
-                      <div style={ pollStatsContainer } >
+                      <div style={{display:'inline-block'}} >
                         <small>Comments</small>
                         <div>
                           <GoCommentDiscussion style={{color: '#9365a3'}}/>
@@ -189,7 +189,7 @@ class UserProfile extends React.Component {
 
 const pollStatsContainer = {
   display: 'inline-block',
-  marginRight: '30px'
+  marginRight: '25px'
 }
 
 const userStatsContainer = {

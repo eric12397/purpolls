@@ -88,11 +88,8 @@ class PollDetail extends React.Component {
               <p> You selected "{ this.props.vote.choice_text }".</p> : ''} 
 
             <div style={ choicesContainer }>
-              <div style={ pageTransitionLeftBtn }>
-                <Link 
-                  className="mr-2" 
-                  to={`/polls/${this.getPreviousPoll()}`}
-                >
+              <div className="active hover" style={ pageTransitionLeftBtn }>
+                <Link to={`/polls/${this.getPreviousPoll()}`}>
                   <AiOutlineDoubleLeft />
                 </Link>
               </div>
@@ -104,11 +101,8 @@ class PollDetail extends React.Component {
               />
               
               
-              <div style={ pageTransitionRightBtn }>
-                <Link 
-                  className="mr-2" 
-                  to={`/polls/${this.getNextPoll()}`}
-                >
+              <div className="active hover" style={ pageTransitionRightBtn }>
+                <Link to={`/polls/${this.getNextPoll()}`}>
                   <AiOutlineDoubleRight />
                 </Link>
               </div>
@@ -155,7 +149,7 @@ class PollDetail extends React.Component {
         transition={{transition: 'linear'}}
       >
       <Row>
-        <Col xs={{ size: 10, offset: 1 }} md={{ size: 10, offset: 1 }}>
+        <Col xs="12" md={{ size: 10, offset: 1 }}>
 				  { poll } 
         </Col>
       </Row>
@@ -165,7 +159,8 @@ class PollDetail extends React.Component {
 }
 
 const choicesContainer = {
-  width: '100%',  
+  width: '95%',  
+  margin: 'auto',
   position: 'relative'
 }
 
@@ -177,19 +172,19 @@ const deletePollBtn = {
 
 const pageTransitionRightBtn = {
   display: 'block',
-  fontSize: '35px',
+  fontSize: '25px',
   position: 'absolute',
-  right: '-55px',
-  top: '30%',
+  right: '-32px',
+  top: '40%',
   cursor: 'pointer'
 }
 
 const pageTransitionLeftBtn = {
   display: 'block',
-  fontSize: '35px',
+  fontSize: '25px',
   position: 'absolute',
-  left: '-45px',
-  top: '30%',
+  left: '-32px',
+  top: '40%',
   cursor: 'pointer'
 }
 
