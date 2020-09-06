@@ -40,7 +40,7 @@ class PollItem extends React.Component {
       <React.Fragment>
         <div className="article-metadata">
           <small className="text-muted">posted by</small>
-          <Link to={`/users/${ this.props.user.username }`} className="pl-1">{ author }</Link>
+          <Link to={`/users/${author}`} className="pl-1">{ author }</Link>
           <small className="pl-2 text-muted">
             { moment( datePosted ).fromNow() }
           </small>
@@ -51,7 +51,7 @@ class PollItem extends React.Component {
         </h1>
         <ChoiceList
           pollId={ id } 
-          choices={ this.props.poll.choices } 
+          choices={ choices } 
           vote={ this.props.vote } 
         />
 
@@ -70,7 +70,6 @@ class PollItem extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  user: state.users.users.find(user => user.username === ownProps.poll.author),
   vote: state.polls.userVotes.some(vote => vote.poll === ownProps.poll.id)
 })
 
