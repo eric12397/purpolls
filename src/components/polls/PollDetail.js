@@ -77,7 +77,7 @@ class PollDetail extends React.Component {
               
               { this.props.username === this.props.poll.author ? 
                 <TiDelete 
-                  style={ deletePollBtn } 
+                  className="delete-poll-btn"
                   onClick={ this.showModal }/>
                 : '' }
             </div>
@@ -88,7 +88,7 @@ class PollDetail extends React.Component {
               <p> You selected "{ this.props.vote.choice_text }".</p> : ''} 
 
             <div style={ choicesContainer }>
-              <div className="active hover" style={ pageTransitionLeftBtn }>
+              <div className="page-transition-left-btn active hover">
                 <Link to={`/polls/${this.getPreviousPoll()}`}>
                   <AiOutlineDoubleLeft />
                 </Link>
@@ -100,8 +100,7 @@ class PollDetail extends React.Component {
                 vote={ this.props.vote } 
               />
               
-              
-              <div className="active hover" style={ pageTransitionRightBtn }>
+              <div className="page-transition-right-btn active hover">
                 <Link to={`/polls/${this.getNextPoll()}`}>
                   <AiOutlineDoubleRight />
                 </Link>
@@ -162,30 +161,6 @@ const choicesContainer = {
   width: '95%',  
   margin: 'auto',
   position: 'relative'
-}
-
-const deletePollBtn = {
-  float: 'right', 
-  cursor: 'pointer',
-  fontSize: '20px'
-}
-
-const pageTransitionRightBtn = {
-  display: 'block',
-  fontSize: '25px',
-  position: 'absolute',
-  right: '-32px',
-  top: '40%',
-  cursor: 'pointer'
-}
-
-const pageTransitionLeftBtn = {
-  display: 'block',
-  fontSize: '25px',
-  position: 'absolute',
-  left: '-32px',
-  top: '40%',
-  cursor: 'pointer'
 }
 
 const mapStateToProps = (state, ownProps) => {
