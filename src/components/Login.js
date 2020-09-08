@@ -37,7 +37,7 @@ class Login extends React.Component {
       >
     	
         <Row>
-          <Col xs="12" md={{ size: 6, offset: 3 }}>
+          <Col md={{ size: 10, offset: 1 }} lg={{ size: 6, offset: 3 }}>
     				<Form 
               className="form-container"
               method="post" 
@@ -68,11 +68,18 @@ class Login extends React.Component {
                   type="submit">Login</button> 
               </FormGroup>
 
-      				
-  					  <small className="text-muted">Need An Account? 
-                <Link className="ml-2" to="/register">Sign Up Now</Link>
-  					  </small>
-              
+      				<div>
+    					  <small className="text-muted">Need an account? 
+                  <Link className="ml-2" to="/register">Sign Up Now</Link>
+    					  </small>
+              </div>
+              <div>
+                <small className="text-muted">Forgot your 
+                  <Link to="/reset-password"> account</Link> ?
+                </small>
+              </div>
+        
+
             </Form>
           </Col>
         </Row>

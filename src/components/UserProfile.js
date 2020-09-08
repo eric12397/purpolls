@@ -23,7 +23,7 @@ class UserProfile extends React.Component {
   componentDidMount() {
     const { username } = this.props.match.params;
     const baseURL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
-    axios.get(`${baseURL}users/${username}/profile-pic-upload/`, {
+    axios.get(`${baseURL}/users/${username}/profile-pic-upload/`, {
       headers: {
         //'Authorization' : localStorage.getItem('accessToken') ? "Bearer " + localStorage.getItem('accessToken') : null,
         //'accept' : 'application/json',

@@ -64,9 +64,9 @@ a:active {
   background: #292929;
   padding: 10px 20px;
   border: 0px;
-  border-radius: 15px;
   margin-bottom: 15px;
-  box-shadow: 2px 2px 10px black
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px black;
 }
 
 .article-content {

@@ -21,6 +21,9 @@ import UserProfile from './components/UserProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 import PollDetail from './components/polls/PollDetail';
 import NewPollForm from './components/polls/NewPollForm';
+import RecoverUsername from './components/RecoverUsername';
+import ResetPassword from './components/ResetPassword';
+import ResetPasswordConfirm from './components/ResetPasswordConfirm';
 
 const options = {
   position: positions.BOTTOM_CENTER,
@@ -54,6 +57,12 @@ class App extends React.Component {
               <Route exact path="/logout" component={ Logout } />
 
               <Route exact path="/login" component={ Login } />
+
+              <Route exact path="/recover-username" component={ RecoverUsername } />
+
+              <Route exact path="/reset-password" component={ ResetPassword } />
+
+              <Route exact path='/password/reset/confirm/:uid/:token' component={ ResetPasswordConfirm } />
 
               <ProtectedRoute exact path="/users/:username" component={ UserProfile } />
 

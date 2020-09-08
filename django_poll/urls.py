@@ -22,6 +22,7 @@ from django.views.generic import TemplateView
 # checks URL if they include the following strings
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/auth/', include('djoser.urls')),
     path('', include('polls.urls')), # sends 'localhost:8000' to polls/urls.py 
     path('', include('comments.urls')),
     path('', include('users.urls')),

@@ -1,4 +1,5 @@
 import axiosInstance from '../../axiosInstance';
+import axios from 'axios'
 import { getUserVotes, getUserLikes, getUserDislikes } from './polls';
 import { getErrors } from './errors';
 import { createMessage } from './messages';
@@ -9,11 +10,14 @@ import {
   HANDLE_LOGOUT,
   REMOVE_USER_VOTES,
   REMOVE_USER_LIKES,
-  REMOVE_USER_DISLIKES
+  REMOVE_USER_DISLIKES,
+  RECOVER_USERNAME,
+  RESET_PASSWORD,
+  RESET_PASSWORD_CONFIRMED
 } from './types.js'
 
 export const verifyCurrentUser = () => (dispatch, getState) => {
-  axiosInstance.get('/current_user/')
+  axiosInstance.get('/auth/current_user/')
     .then(response => {
       console.log(response)
       dispatch({
@@ -30,7 +34,7 @@ export const verifyCurrentUser = () => (dispatch, getState) => {
 }
 
 export const handleRegistration = (data, history) => dispatch => {
-  axiosInstance.post('/register/', {
+  axiosInstance.post('/auth/register/', {
     username: data.username,
     email: data.email,
     password: data.password,
@@ -44,7 +48,7 @@ export const handleRegistration = (data, history) => dispatch => {
 }
 
 export const handleLogin = (data, history) => (dispatch, getState) => {
-  axiosInstance.post('/token/obtain/', {
+  axiosInstance.post('/auth/token/obtain/', {
     username: data.username,
     password: data.password
   })
@@ -75,4 +79,42 @@ export const handleLogout = () => dispatch => {
   dispatch({ type: REMOVE_USER_VOTES })
   dispatch({ type: REMOVE_USER_LIKES })
   dispatch({ type: REMOVE_USER_DISLIKES })
+}
+
+/*export const recoverUsername = () => dispatch => {
+
+}*/
+
+export const resetPassword = (email) => dispatch => {
+  axiosInstance.post('/auth/users/reset_password/', {
+      email
+    })
+    .then(response => {
+      console.log(response.data)
+      dispatch(createMessage({ resetPasswordRequest: 'An email request has been sent to reset your password! '}))
+      dispatch({
+        type: RESET_PASSWORD,
+        payload: response.data
+      })
+    }).catch(error => dispatch(getErrors(error.response)))
+
+    
+}
+
+export const resetPasswordConfirm = (uid, token, new_password, re_new_password, history) => dispatch => {
+  axiosInstance.post('/auth/users/reset_password_confirm/', {
+      uid,
+      token,
+      new_password,
+      re_new_password
+    })
+    .then(response => {
+      console.log(response.data)
+      history.push('/login')
+      dispatch(createMessage({ resetPasswordConfirmed: 'You can now log in with your new password!'}))
+      dispatch({
+        type: RESET_PASSWORD_CONFIRMED,
+        payload: response.data
+      })
+    }).catch(error => dispatch(getErrors(error.response))) 
 }

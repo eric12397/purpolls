@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [ '*' ]
 INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
+    'djoser',
     'comments.apps.CommentsConfig',
     'users.apps.UsersConfig',
     'polls.apps.PollsConfig',
@@ -82,6 +83,18 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
+DJOSER = {
+    'SEND_CONFIRMATION_EMAIL': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True, 
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+
+    
+}
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'django_poll.urls' # starting point of url pattern
@@ -116,6 +129,14 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'eric12397@gmail.com'
+EMAIL_HOST_PASSWORD = 'wlbktynravvppvpa'
+EMAIL_USE_TLS = True
 
 
 # Password validation

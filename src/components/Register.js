@@ -37,7 +37,7 @@ class Register extends React.Component {
         transition={{transition: 'linear'}}
       >
         <Row>
-          <Col xs="12" sm="12" md={{ size: 6, offset: 3 }}>
+          <Col md={{ size: 10, offset: 1 }} lg={{ size: 6, offset: 3 }}>
             <Form
               className="form-container" 
               method="POST"
@@ -77,10 +77,16 @@ class Register extends React.Component {
                   type="submit">Sign Up</button>
                 </FormGroup>
 
-                
-                <small className="text-muted">Already Have An Account? 
-                  <Link className="ml-2" to="/login">Log In</Link>
-                </small>
+                <div>
+                  <small className="text-muted">Already have an account? 
+                    <Link className="ml-2" to="/login">Log In</Link>
+                  </small>
+                </div>
+                <div>
+                  <small className="text-muted">Forgot your 
+                    <Link to="/reset-password"> account</Link> ?
+                  </small>
+                </div>
                 
             </Form>
           </Col>

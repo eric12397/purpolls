@@ -21,6 +21,8 @@ class AlertSystem extends React.Component {
         alert.error('Answer fields are empty!')
       } if (error.message.comment_text) {
         alert.error('Comment field is empty!')
+      } if (error.message[0] === "User with given email does not exist.") {
+        alert.error('The email you entered was not found in our system. Please enter another email address!')
       }
     }
 
@@ -33,6 +35,10 @@ class AlertSystem extends React.Component {
         alert.success(message.pollCreated)
       } if (message.pollDeleted) {
         alert.success(message.pollDeleted)
+      } if (message.resetPasswordRequest) {
+        alert.success(message.resetPasswordRequest)
+      } if (message.resetPasswordConfirmed) {
+        alert.success(message.resetPasswordConfirmed)
       }
       
     }
