@@ -1,4 +1,5 @@
 import React from 'react'
+import './AlertTemplate.css'
 import { BsCheckBox } from 'react-icons/bs'
 import { MdErrorOutline } from 'react-icons/md'
 
@@ -13,7 +14,6 @@ const alertStyle = {
   justifyContent: 'space-between',
   alignItems: 'center',
   boxShadow: '3px 3px 8px black',
-  width: '500px',
   boxSizing: 'border-box'
 }
 
@@ -36,7 +36,7 @@ const errorIcon = {
 }
 
 const AlertTemplate = ({ style, options, message, close }) => (
-  <div style={{...alertStyle, ...style }}>
+  <div style={{...alertStyle, ...style }} className="alert-template">
     {options.type === 'info' && '!'}
     {options.type === 'success' && <BsCheckBox style={ successIcon }/> }
     {options.type === 'error' && <MdErrorOutline style={ errorIcon }/> }

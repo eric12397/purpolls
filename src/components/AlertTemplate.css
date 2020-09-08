@@ -1,0 +1,23 @@
+@media (min-width: 576px) {
+    .alert-template {
+        width: 500px;
+    }
+}
+
+@media (min-width: 768px) {
+    .alert-template {
+        width: 500px;
+    }
+}
+
+@media (min-width: 992px) {
+    .alert-template {
+        width: 500px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .alert-template {
+        width: 500px;
+    }
+}
