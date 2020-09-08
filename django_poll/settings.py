@@ -22,10 +22,10 @@ print("base dir path", BASE_DIR)
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '84-w4*%hh@%c9)&0srco5m%4t@g)+w^&9e@-&-*(%&dgebqdba'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.environ.get('DJANGO_DEBUG_VALUE') == 'True')
 
 ALLOWED_HOSTS = [ '*' ]
 
@@ -91,8 +91,6 @@ DJOSER = {
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-
-    
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -134,8 +132,8 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'eric12397@gmail.com'
-EMAIL_HOST_PASSWORD = 'wlbktynravvppvpa'
+EMAIL_HOST_USER = os.environ.get('GMAIL')
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD')
 EMAIL_USE_TLS = True
 
 
@@ -191,7 +189,10 @@ MEDIA_URL = '/media/'
 
 django_heroku.settings(locals())
 
-
+print(os.environ.get('DJANGO_SECRET_KEY'))
+print(os.environ.get('DJANGO_DEBUG_VALUE'))
+print(os.environ.get('GMAIL'))
+print(os.environ.get('GMAIL_APP_PASSWORD'))
 
 
 
