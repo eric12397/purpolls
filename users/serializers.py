@@ -1,7 +1,25 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from djoser.serializers import UserCreateSerializer as BaseUserRegistrationSerializer
 from .models import Profile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class UserRegistrationSerializer(BaseUserRegistrationSerializer):
+    password = serializers.CharField(write_only=True) # not included in JSON response
+    confirmed_password = serializers.CharField(write_only=True)
+
+    class Meta(BaseUserRegistrationSerializer.Meta):
+        model = User
+        fields = ('id', 'email', 'username', 'password', 'confirmed_password')
+
+    def validate(self, data):
+        if data['password'] != data['confirmed_password']:
+            raise serializers.ValidationError("The two password fields didn't match.")
+        return data
 
 
 def required(value):
@@ -22,22 +40,6 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'date_joined')
-
-
-class CreateUserSerializer(serializers.ModelSerializer): 
-    password = serializers.CharField(write_only=True) # not included in JSON response
-    email = serializers.EmailField(validators=[required])
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email', 'date_joined', 'password')
-
-    def create(self, validated_data):
-        user = User.objects.create(email=validated_data['email'], 
-                                   username=validated_data['username'])
-        user.set_password(validated_data['password']) # password gets hashed
-        user.save()
-        return user
 
 
 class ProfilePicSerializer(serializers.ModelSerializer):

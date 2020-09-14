@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Row, Col, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
-import { resetPassword } from '../redux/actions/auth'
+import { requestPasswordReset } from '../redux/actions/auth'
 import { motion } from 'framer-motion';
 
 
@@ -13,7 +13,7 @@ class ResetPassword extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.props.resetPassword(this.state.email)
+    this.props.requestPasswordReset(this.state.email)
     this.setState({ requestSent: true })
   }
 
@@ -81,4 +81,4 @@ class ResetPassword extends React.Component {
   }
 }
 
-export default connect(null, { resetPassword })(ResetPassword);
+export default connect(null, { requestPasswordReset })(ResetPassword);

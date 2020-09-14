@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 class Login extends React.Component {
 	state = {
-		username: '',
+		email: '',
 		password: ''
 	}
 
@@ -18,7 +18,7 @@ class Login extends React.Component {
   }
 
 	handleChange = event => {
-		const inputName = event.target.name; // username, password
+		const inputName = event.target.name; // email, password
 		const inputValue = event.target.value;
 		this.setState(prevState => {
 			const newState = prevState ;
@@ -46,8 +46,8 @@ class Login extends React.Component {
               <FormGroup> 
   							<input
   								type="text" 
-  								name="username"		
-                  placeholder="Username"
+  								name="email"		
+                  placeholder="Email*"
   								onChange={ this.handleChange } 
                 />
               </FormGroup>
@@ -56,7 +56,7 @@ class Login extends React.Component {
   							<input 
   								type="password" 
   								name="password"
-                  placeholder="Password"								
+                  placeholder="Password*"								
   								onChange={ this.handleChange } 
                 />
   					  </FormGroup>

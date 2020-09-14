@@ -1,13 +1,13 @@
-from django.shortcuts import render, get_object_or_404, redirect
 from .models import Comment, CommentLike, CommentDislike
 from polls.models import Poll
-from django.contrib.auth.models import User
 from .serializers import CommentSerializer, CommentLikeSerializer, CommentDislikeSerializer
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class CommentListAPI(generics.ListCreateAPIView):
 	serializer_class = CommentSerializer

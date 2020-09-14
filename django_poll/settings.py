@@ -25,7 +25,7 @@ print("base dir path", BASE_DIR)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('DJANGO_DEBUG_VALUE') == 'True')
+DEBUG = True #(os.environ.get('DJANGO_DEBUG_VALUE') == 'True')
 
 ALLOWED_HOSTS = [ '*' ]
 
@@ -87,10 +87,18 @@ DJOSER = {
     'SEND_CONFIRMATION_EMAIL': True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True, 
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND': True,
-    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+
+    'SEND_ACTIVATION_EMAIL': True,
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.UserRegistrationSerializer'
+    }
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -187,12 +195,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # creates 'media' folder inside bas
 
 MEDIA_URL = '/media/'
 
+AUTH_USER_MODEL = 'users.CustomUser'
+
 django_heroku.settings(locals())
 
-print(os.environ.get('DJANGO_SECRET_KEY'))
-print(os.environ.get('DJANGO_DEBUG_VALUE'))
-print(os.environ.get('GMAIL'))
-print(os.environ.get('GMAIL_APP_PASSWORD'))
 
 
 

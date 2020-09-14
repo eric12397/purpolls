@@ -1,9 +1,3 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required # decorator
-from .forms import RegisterForm, ProfileUpdateForm
-from .models import Profile
-from django.contrib.auth.models import User
 from rest_framework import permissions, status, generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -11,8 +5,11 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import UserSerializer, CreateUserSerializer, CustomTokenObtainPairSerializer, ProfilePicSerializer
+from .models import Profile
+from .serializers import UserSerializer, CustomTokenObtainPairSerializer, ProfilePicSerializer
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class CustomTokenObtainPairView(TokenObtainPairView):
 	serializer_class = CustomTokenObtainPairSerializer
@@ -29,21 +26,6 @@ class CurrentUserAPI(APIView):
 class UserListAPI(generics.ListAPIView):
 	serializer_class = UserSerializer
 	queryset = User.objects.all()
-
-
-class RegistrationAPI(APIView):
-	#permission_classes = (AllowAny, )
-
-	def post(self, request, format=None):
-		print(request.data)
-		serializer = CreateUserSerializer(data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			print(serializer.data)
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		else:
-			print(serializer.errors)
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfilePicAPI(APIView):

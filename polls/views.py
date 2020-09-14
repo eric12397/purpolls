@@ -1,15 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from django.template.loader import render_to_string
 from .models import Poll, Choice, Vote, Like, Dislike
-from django.contrib.auth.models import User
 from .serializers import PollAndChoicesSerializer, ChoiceSerializer, VoteSerializer, LikeSerializer, DislikeSerializer
-from django.contrib.auth.decorators import login_required
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class PollListAPI(generics.ListCreateAPIView):
 	queryset = Poll.objects.order_by('-date_posted')

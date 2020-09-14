@@ -1,13 +1,13 @@
 import datetime
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 class Poll(models.Model): # each class is its own table, each attribute is its own column within table 
 	question_text = models.CharField(max_length=200, verbose_name=('Question')) # verbose_name is what appears on the website
 	date_posted = models.DateTimeField(default=timezone.now)
-	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	likes = models.IntegerField(default=0)
 	dislikes = models.IntegerField(default=0)
 
@@ -39,7 +39,7 @@ class Choice(models.Model):
 class Vote(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
 	choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True)
-	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
 	class Meta:
 		unique_together = ("poll", "choice", "user")
@@ -50,7 +50,7 @@ class Vote(models.Model):
 
 class Like(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
-	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
 	class Meta:
 		unique_together = ("poll", "user")
@@ -61,7 +61,7 @@ class Like(models.Model):
 
 class Dislike(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
-	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
 	class Meta:
 		unique_together = ("poll", "user")

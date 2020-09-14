@@ -10,7 +10,8 @@ class Register extends React.Component {
   state = {
     username: '',
     email: '',
-    password: '', 
+    password: '',
+    confirmed_password: ''
   }
 
   handleSubmit = event => {
@@ -43,13 +44,13 @@ class Register extends React.Component {
               method="POST"
               onSubmit={ this.handleSubmit }
             >
-              <legend className="mb-4">Register for a new account!</legend>
+              <legend className="mb-2">Register for a new account!</legend>
                 <FormGroup>
                   <input 
                     autoComplete="new-password"
                     type="text" 
                     name="username"
-                    placeholder="Username"
+                    placeholder="Username*"
                     onChange={ this.handleChange } />
                 </FormGroup>
 
@@ -58,7 +59,7 @@ class Register extends React.Component {
                     autoComplete="new-password"
                     type="text" 
                     name="email" 
-                    placeholder="Email"             
+                    placeholder="Email*"             
                     onChange={ this.handleChange } />
                 </FormGroup>
 
@@ -66,17 +67,24 @@ class Register extends React.Component {
                   <input 
                     type="password" 
                     name="password"
-                    placeholder="Password"
+                    placeholder="Password*"
                     onChange={ this.handleChange } />
                 </FormGroup>
 
                 <FormGroup>
-                  <button
-                  style={{ margin: '20px auto' }} 
-                  className="btn custom-btn purple-btn" 
-                  type="submit">Sign Up</button>
+                  <input 
+                    type="password" 
+                    name="confirmed_password"
+                    placeholder="Confirm Password*"
+                    onChange={ this.handleChange } />
                 </FormGroup>
 
+                
+                <button
+                style={{ margin: '20px auto' }} 
+                className="btn custom-btn purple-btn" 
+                type="submit">Sign Up</button>
+                
                 <div>
                   <small className="text-muted">Already have an account? 
                     <Link className="ml-2" to="/login">Log In</Link>

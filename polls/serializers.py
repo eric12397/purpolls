@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from .models import Poll, Choice, Vote, Like, Dislike
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class VoteSerializer(serializers.ModelSerializer):
 	choice_text = serializers.SerializerMethodField()

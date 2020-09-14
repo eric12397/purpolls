@@ -4,7 +4,6 @@ from .views import (
 	CurrentUserAPI, 
 	UserListAPI,
 	UserProfilePicAPI,
-	RegistrationAPI, 
 	CustomTokenObtainPairView
 )
 from . import views
@@ -14,7 +13,6 @@ urlpatterns = [
 	path('api/users/<username>/profile-pic-upload/', UserProfilePicAPI.as_view()),
 	
 	path('api/auth/current_user/', CurrentUserAPI.as_view()),
-    path('api/auth/register/', RegistrationAPI.as_view()),
 	path('api/auth/token/obtain/', CustomTokenObtainPairView.as_view()),
     path('api/auth/token/refresh/', TokenRefreshView.as_view()),
 

@@ -12,11 +12,12 @@ import {
   REMOVE_USER_LIKES,
   REMOVE_USER_DISLIKES,
   RECOVER_USERNAME,
-  RESET_PASSWORD,
-  RESET_PASSWORD_CONFIRMED
+  PASSWORD_RESET_REQUESTED,
+  PASSWORD_RESET_CONFIRMED,
+  ACCOUNT_ACTIVATED
 } from './types.js'
 
-export const verifyCurrentUser = () => (dispatch, getState) => {
+export const loadCurrentUser = () => (dispatch, getState) => {
   axiosInstance.get('/auth/current_user/')
     .then(response => {
       console.log(response)
@@ -34,22 +35,34 @@ export const verifyCurrentUser = () => (dispatch, getState) => {
 }
 
 export const handleRegistration = (data, history) => dispatch => {
-  axiosInstance.post('/auth/register/', {
+  axiosInstance.post('/auth/users/', {
     username: data.username,
     email: data.email,
     password: data.password,
+    confirmed_password: data.confirmed_password
   })
     .then(response => {
       dispatch(addNewUser(response.data))
-      dispatch(createMessage({ registerSuccess: 'Your account has been created successfully! Log in now to start polling!'}))
-      history.push('/login')
+      dispatch(createMessage({ activationEmailSent: 'A link has been sent to your email to activate your new account!' }))
     })
     .catch(error => dispatch(getErrors(error.response)))
 }
 
+export const activateAccount = (uid, token, history) => dispatch => {
+  axiosInstance.post('/auth/users/activation/', {
+    uid,
+    token
+  })
+    .then(response => {
+      history.push('/login')
+      dispatch({ type: ACCOUNT_ACTIVATED })
+      dispatch(createMessage({ accountActivated: 'Your account has now been activated. Log in with your new credentials.'}))
+    })
+}
+
 export const handleLogin = (data, history) => (dispatch, getState) => {
   axiosInstance.post('/auth/token/obtain/', {
-    username: data.username,
+    email: data.email,
     password: data.password
   })
     .then(response => {
@@ -81,27 +94,19 @@ export const handleLogout = () => dispatch => {
   dispatch({ type: REMOVE_USER_DISLIKES })
 }
 
-/*export const recoverUsername = () => dispatch => {
-
-}*/
-
-export const resetPassword = (email) => dispatch => {
+export const requestPasswordReset = (email) => dispatch => {
   axiosInstance.post('/auth/users/reset_password/', {
       email
     })
     .then(response => {
-      console.log(response.data)
-      dispatch(createMessage({ resetPasswordRequest: 'An email request has been sent to reset your password! '}))
-      dispatch({
-        type: RESET_PASSWORD,
-        payload: response.data
-      })
-    }).catch(error => dispatch(getErrors(error.response)))
+      dispatch(createMessage({ passwordResetRequested: 'An email request has been sent to reset your password! '}))
+      dispatch({ type: PASSWORD_RESET_REQUESTED })
+    })
 
-    
+    .catch(error => dispatch(getErrors(error.response)))
 }
 
-export const resetPasswordConfirm = (uid, token, new_password, re_new_password, history) => dispatch => {
+export const confirmPasswordReset = (uid, token, new_password, re_new_password, history) => dispatch => {
   axiosInstance.post('/auth/users/reset_password_confirm/', {
       uid,
       token,
@@ -109,12 +114,10 @@ export const resetPasswordConfirm = (uid, token, new_password, re_new_password, 
       re_new_password
     })
     .then(response => {
-      console.log(response.data)
       history.push('/login')
-      dispatch(createMessage({ resetPasswordConfirmed: 'You can now log in with your new password!'}))
-      dispatch({
-        type: RESET_PASSWORD_CONFIRMED,
-        payload: response.data
-      })
-    }).catch(error => dispatch(getErrors(error.response))) 
+      dispatch(createMessage({ passwordResetConfirmed: 'You can now log in with your new password!'}))
+      dispatch({ type: PASSWORD_RESET_CONFIRMED })
+    })
+
+    .catch(error => dispatch(getErrors(error.response))) 
 }

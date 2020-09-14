@@ -16,7 +16,7 @@ class ChoiceItem extends React.Component {
 
 		return (
 			<div 
-        style={{ border: this.props.vote ? '0px' : '2px solid #943dff' }}
+        style={{ border: this.props.vote ? '0px' : '1px solid #943dff' }}
         className={`choice-btn ${ this.props.vote ? "" : "choice-btn-hover"}`} 
         data-label={ choice_text }
         onClick={ this.handleVote }

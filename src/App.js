@@ -7,7 +7,7 @@ import { Container } from 'reactstrap';
 import { AnimatePresence } from 'framer-motion';
 import { connect } from 'react-redux';
 import { getPolls } from './redux/actions/polls'
-import { verifyCurrentUser } from './redux/actions/auth'
+import { loadCurrentUser } from './redux/actions/auth'
 import { getUsers } from './redux/actions/users'
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from './components/AlertTemplate'
@@ -23,6 +23,8 @@ import PollDetail from './components/polls/PollDetail';
 import NewPollForm from './components/polls/NewPollForm';
 import ResetPassword from './components/ResetPassword';
 import ResetPasswordConfirm from './components/ResetPasswordConfirm';
+import ActivateAccount from './components/ActivateAccount'
+
 
 const options = {
   position: positions.BOTTOM_CENTER,
@@ -36,7 +38,7 @@ class App extends React.Component {
   componentDidMount() {
     this.props.getPolls()
     this.props.getUsers()
-    this.props.verifyCurrentUser()
+    this.props.loadCurrentUser()
     console.log(`${process.env.NODE_ENV} mode`)
   }
 
@@ -53,13 +55,15 @@ class App extends React.Component {
             <Switch location={ location } key={ location.pathname } >
               <Route exact path="/register" component={ Register } />
 
+              <Route exact path="/activate/:uid/:token" component={ ActivateAccount } />
+
               <Route exact path="/logout" component={ Logout } />
 
               <Route exact path="/login" component={ Login } />
 
               <Route exact path="/reset-password" component={ ResetPassword } />
 
-              <Route exact path='/password/reset/confirm/:uid/:token' component={ ResetPasswordConfirm } />
+              <Route exact path="/password/reset/confirm/:uid/:token" component={ ResetPasswordConfirm } />
 
               <ProtectedRoute exact path="/users/:username" component={ UserProfile } />
 
@@ -79,4 +83,4 @@ class App extends React.Component {
     }
   }
 
-export default connect(null, { getPolls, verifyCurrentUser, getUsers })(withRouter(App)) ;
+export default connect(null, { getPolls, loadCurrentUser, getUsers })(withRouter(App)) ;

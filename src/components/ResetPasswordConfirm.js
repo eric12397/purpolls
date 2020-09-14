@@ -2,24 +2,22 @@ import React from 'react'
 import { Link, Redirect } from 'react-router-dom';
 import { Row, Col, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
-import { resetPasswordConfirm } from '../redux/actions/auth'
+import { confirmPasswordReset } from '../redux/actions/auth'
 import { motion } from 'framer-motion';
 
 class ResetPasswordConfirm extends React.Component {
   state = {
     new_password: '',
-    re_new_password: '',
-    requestSent: false
+    re_new_password: ''
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const uid = this.props.match.params.uid;
-    const token = this.props.match.params.token;
+    const { uid, token } = this.props.match.params
     const { new_password, re_new_password } = this.state;
     const { history } = this.props;
     
-    this.props.resetPasswordConfirm(
+    this.props.confirmPasswordReset(
       uid, 
       token, 
       new_password, 
@@ -39,17 +37,6 @@ class ResetPasswordConfirm extends React.Component {
   }
     
   render() {
-    if (this.state.requestSent)
-      return (
-        <motion.div
-          initial={{opacity: 0, x: '-100vh'}}
-          animate={{opacity: 1, x: 0}}
-          exit={{opacity: 0, x: '-100vh'}} 
-          transition={{transition: 'linear'}}
-        > 
-          <Redirect to='/login' />
-        </motion.div>
-      )
     return (
       <motion.div
         initial={{opacity: 0, x: '-100vh'}}
@@ -67,7 +54,7 @@ class ResetPasswordConfirm extends React.Component {
               <legend className="mb-4">Create a new password</legend>
               <FormGroup> 
                 <input
-                  type="text" 
+                  type="password" 
                   name="new_password"   
                   placeholder="New password"
                   onChange={ this.handleChange } 
@@ -76,7 +63,7 @@ class ResetPasswordConfirm extends React.Component {
 
               <FormGroup> 
                 <input
-                  type="text" 
+                  type="password" 
                   name="re_new_password"   
                   placeholder="Confirm new password"
                   onChange={ this.handleChange } 
@@ -98,4 +85,4 @@ class ResetPasswordConfirm extends React.Component {
   }
 }
 
-export default connect(null, { resetPasswordConfirm })(ResetPasswordConfirm)
+export default connect(null, { confirmPasswordReset })(ResetPasswordConfirm)
