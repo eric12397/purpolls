@@ -21,10 +21,13 @@ class UserRegistrationSerializer(BaseUserRegistrationSerializer):
             raise serializers.ValidationError("The two password fields didn't match.")
         return data
 
+    def create(self, validated_data):
+        user = User.objects.create(email=validated_data['email'], 
+                                   username=validated_data['username'])
+        user.set_password(validated_data['password']) # password gets hashed
+        user.save()
+        return user
 
-def required(value):
-    if value is None:
-        raise serializers.ValidationError('This field is required')
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):

@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from PIL import Image
 
 class CustomUserManager(BaseUserManager):
-	def create_user(self, email, username, confirmed_password, password=None):
+	def create_user(self, email, username, password=None):
 		if not email:
 			raise ValueError('Users must have an email address')
 
@@ -15,7 +15,7 @@ class CustomUserManager(BaseUserManager):
 		user.save()
 		return user
 
-	def create_superuser(self, email, username, confirmed_password, password=None):
+	def create_superuser(self, email, username, password=None):
 		superuser = self.create_user(email=email, username=username, password=password)
 		superuser.is_staff = True
 		superuser.is_superuser = True 
