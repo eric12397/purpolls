@@ -43,7 +43,7 @@ class CustomUserAdmin(BaseUserAdmin):
 	add_form = UserCreationForm
 
 	model = CustomUser
-	list_display = ('email', 'username', 'is_staff',) 
+	list_display = ('email', 'username', 'is_staff', 'is_active') 
 	list_filter = ('is_staff',) 
 	search_fields = ('email', 'username')  
 	ordering = ('username',)  

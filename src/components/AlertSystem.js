@@ -47,6 +47,8 @@ class AlertSystem extends React.Component {
         alert.success(message.activationEmailSent)
       } if (message.accountActivated) {
         alert.success(message.accountActivated)
+      } if (message.passwordsMustMatch) {
+        alert.error(message.passwordsMustMatch)
       }
       
     }

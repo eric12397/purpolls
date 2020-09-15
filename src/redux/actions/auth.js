@@ -35,7 +35,9 @@ export const loadCurrentUser = () => (dispatch, getState) => {
 }
 
 export const handleRegistration = (data, history) => dispatch => {
-  axiosInstance.post('/auth/users/', {
+  if (data.password === data.confirmed_password) {
+    
+    axiosInstance.post('/auth/users/', {
     username: data.username,
     email: data.email,
     password: data.password,
@@ -46,6 +48,10 @@ export const handleRegistration = (data, history) => dispatch => {
       dispatch(createMessage({ activationEmailSent: 'A link has been sent to your email to activate your new account!' }))
     })
     .catch(error => dispatch(getErrors(error.response)))
+  } else {
+    dispatch(createMessage({ passwordsMustMatch: "The two password fields didn't match." }))
+  }
+  
 }
 
 export const activateAccount = (uid, token, history) => dispatch => {
@@ -58,6 +64,7 @@ export const activateAccount = (uid, token, history) => dispatch => {
       dispatch({ type: ACCOUNT_ACTIVATED })
       dispatch(createMessage({ accountActivated: 'Your account has now been activated. Log in with your new credentials.'}))
     })
+    .catch(error => console.log(error.response))
 }
 
 export const handleLogin = (data, history) => (dispatch, getState) => {

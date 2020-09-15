@@ -25,7 +25,7 @@ print("base dir path", BASE_DIR)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('DJANGO_DEBUG_VALUE') == 'True')
+DEBUG = True #(os.environ.get('DJANGO_DEBUG_VALUE') == 'True')
 
 ALLOWED_HOSTS = [ '*' ]
 
@@ -96,9 +96,7 @@ DJOSER = {
 
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SERIALIZERS': {
-        'user_create': 'users.serializers.UserRegistrationSerializer'
-    }
+    
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
