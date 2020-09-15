@@ -122,10 +122,12 @@
 
 @media (max-width: 576px) {
     .page-transition-right-btn {
-      right: -27px;
+      right: -24px;
+      font-size: 18px;
     }
     .page-transition-left-btn {
-      left: -27px;
+      left: -24px;
+      font-size: 18px;
     }
 }
 
