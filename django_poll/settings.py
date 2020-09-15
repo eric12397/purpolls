@@ -25,7 +25,7 @@ print("base dir path", BASE_DIR)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #(os.environ.get('DJANGO_DEBUG_VALUE') == 'True')
+DEBUG = (os.environ.get('DJANGO_DEBUG_VALUE') == 'True')
 
 ALLOWED_HOSTS = [ '*' ]
 
