@@ -67,14 +67,12 @@ class UserProfile extends React.Component {
       totalRenown -= poll.dislikes; 
     })
 
-    const baseURL = process.env.NODE_ENV === 'production' ? 'https://purpolls.herokuapp.com' : 'http://localhost:8000'
-
     const userProfile = this.props.userProfile ? (
       <Row>
         <Col lg="4">
           <div className="content-section">
           <div className="media article-metadata">
-            <img className="rounded-circle account-img" src={baseURL + this.state.image}/>
+            <img className="rounded-circle account-img" src={this.state.image}/>
             <div className="media-body mt-3" style={{ overflow: 'hidden' }}>
               <h2 className="account-heading">{ this.props.userProfile.username }</h2> 
               <p className="text-secondary">{ this.props.userProfile.email }</p>
