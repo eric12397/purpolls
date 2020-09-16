@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { handleLogout } from '../redux/actions/auth'
+import { handleLogout } from '../../redux/actions/auth'
 import { motion } from 'framer-motion';
 
 

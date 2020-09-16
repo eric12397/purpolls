@@ -4,7 +4,7 @@ import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import LikePoll from './LikePoll';
 import DislikePoll from './DislikePoll';
-import Modal from '../Modal';
+import Modal from '../ui/Modal';
 import ChoiceList from './ChoiceList';
 import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';

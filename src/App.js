@@ -10,20 +10,20 @@ import { getPolls } from './redux/actions/polls'
 import { loadCurrentUser } from './redux/actions/auth'
 import { getUsers } from './redux/actions/users'
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
-import AlertTemplate from './components/AlertTemplate'
-import AlertSystem from './components/AlertSystem'
-import Home from './components/Home';
-import Navbar from './components/Navbar';
-import Login from './components/Login';
-import Logout from './components/Logout';
-import Register from './components/Register';
-import UserProfile from './components/UserProfile';
-import ProtectedRoute from './components/ProtectedRoute';
+import AlertTemplate from './components/ui/AlertTemplate'
+import AlertSystem from './components/ui/AlertSystem'
+import Home from './components/containers/Home';
+import Navbar from './components/ui/Navbar';
+import Login from './components/containers/Login';
+import Logout from './components/containers/Logout';
+import Register from './components/containers/Register';
+import UserProfile from './components/containers/UserProfile';
+import ProtectedRoute from './components/containers/ProtectedRoute';
 import PollDetail from './components/polls/PollDetail';
 import NewPollForm from './components/polls/NewPollForm';
-import ResetPassword from './components/ResetPassword';
-import ResetPasswordConfirm from './components/ResetPasswordConfirm';
-import ActivateAccount from './components/ActivateAccount'
+import ResetPassword from './components/containers/ResetPassword';
+import ResetPasswordConfirm from './components/containers/ResetPasswordConfirm';
+import ActivateAccount from './components/containers/ActivateAccount'
 
 
 const options = {

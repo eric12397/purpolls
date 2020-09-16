@@ -1,5 +1,5 @@
 import React from 'react'
-import PollList from "./polls/PollList"
+import PollList from "../polls/PollList"
 import { motion } from 'framer-motion';
 
 class Home extends React.Component {

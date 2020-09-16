@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 import { motion } from 'framer-motion';
 import { connect } from 'react-redux';
-import { activateAccount } from '../redux/actions/auth'
+import { activateAccount } from '../../redux/actions/auth'
 
 class ActivateAccount extends React.Component {
   handleClick = () => {

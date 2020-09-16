@@ -12,8 +12,8 @@ import { GoCommentDiscussion } from 'react-icons/go';
 import { FaCrown } from 'react-icons/fa';
 import { FaPoll } from 'react-icons/fa';
 import { AiOutlineForm } from "react-icons/ai";
-import ProfilePicChanger from "./ProfilePicChanger";
-import Tooltip from './Tooltip'
+import ProfilePicChanger from "../ui/ProfilePicChanger";
+import Tooltip from '../ui/Tooltip'
 
 class UserProfile extends React.Component {
   state = {
