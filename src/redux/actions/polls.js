@@ -81,6 +81,7 @@ export const handleVote = (choiceId, pollId, history) => (dispatch, getState) =>
     user_id: user.id
   })
     .then(response => {
+      console.log(response.data)
       dispatch({
         type: HANDLE_VOTE,
         payload: response.data

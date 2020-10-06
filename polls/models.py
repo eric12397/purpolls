@@ -20,6 +20,9 @@ class Choice(models.Model):
 	choice_text = models.CharField(max_length=200, verbose_name=('Choice'))
 	votes = models.IntegerField(default=0)
 
+	class Meta:
+		ordering = ['id']
+
 	@property
 	def get_percent(self):
 		choices = Choice.objects.filter(poll=self.poll) # filters all related choices by poll 

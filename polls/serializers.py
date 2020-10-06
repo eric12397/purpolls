@@ -38,8 +38,10 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 
 class PollAndChoicesSerializer(serializers.ModelSerializer):
-	choices = ChoiceSerializer(source="choice_set", many=True, required=True)
 	author = serializers.CharField()
+	choices = serializers.SerializerMethodField()
+	# choices = ChoiceSerializer(source="choice_set", many=True, required=True)
+	
 	total_comments = serializers.SerializerMethodField()
 
 	def create(self, validated_data):
@@ -53,8 +55,13 @@ class PollAndChoicesSerializer(serializers.ModelSerializer):
 		
 		return poll
 
+	def get_choices(self, instance):
+		choices = instance.choice_set.all().order_by('id')
+		print(choices)
+		return ChoiceSerializer(choices, many=True).data
+
 	def get_total_comments(self, obj):
-		return obj.comment_set.all().count() 
+		return obj.comment_set.all().count()  
 
 
 	class Meta:
