@@ -4,7 +4,17 @@ import { handleVote } from '../../redux/actions/polls';
 import { withRouter } from 'react-router';
 
 class ChoiceItem extends React.Component {
-  
+
+  selectedChoiceStyle = () => {    
+    if (this.props.vote) {
+      return {
+        width: `${ this.props.choice.percent }%`,
+        background: this.props.vote.choice_text === this.props.choice.choice_text ? 'linear-gradient(120deg, rgba(148,61,255,1) 0%, rgba(157,67,168,1) 100%)' 
+          : '#42413a'
+      }
+    }
+  }
+
   handleVote = () => {
     const { id: choiceId } = this.props.choice;
     const { pollId, history } = this.props;
@@ -21,11 +31,17 @@ class ChoiceItem extends React.Component {
         data-label={ choice_text }
         onClick={ this.handleVote }
       >
-				<span style={{ width: this.props.vote ? `${ percent }%` : '' }} className="bar"></span>
+				<span 
+          style={ this.selectedChoiceStyle() } 
+          className="bar"
+        >
+        </span>
   			<p className="percent">{ this.props.vote ? `${ percent }%` : '' }</p>    
 			</div>			 
 		)
 	}
 }
+
+
 
 export default connect(null, { handleVote }) (withRouter(ChoiceItem))

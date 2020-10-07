@@ -70,7 +70,7 @@ class PollItem extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  vote: state.polls.userVotes.some(vote => vote.poll === ownProps.poll.id)
+  vote: state.polls.userVotes.find(vote => vote.poll === ownProps.poll.id)
 })
 
 export default connect(mapStateToProps)(PollItem);
