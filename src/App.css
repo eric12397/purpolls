@@ -6,8 +6,8 @@
 }
 
 body {
-  background: radial-gradient(circle, rgba(70,53,96,1) 1%, rgba(37,39,54,1) 75%);
-  /*background: radial-gradient(circle, rgba(55,59,82,1) 30%, rgba(37,39,54,1) 85%);*/
+  /*background: radial-gradient(circle, rgba(70,53,96,1) 1%, rgba(37,39,54,1) 75%);*/
+  background: radial-gradient(circle, rgba(55,59,82,1) 30%, rgba(37,39,54,1) 85%);
   color: #e1e1e1;
   margin-top: 5rem;
   font-family: Asap, sans-serif;
