@@ -1,2 +1,2 @@
 # purpolls
-polling web app using django backend and react frontend 
+Sports polling web application developed with React frontend and Django backend
