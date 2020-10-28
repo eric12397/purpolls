@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Spinner } from 'reactstrap';
 import { motion } from 'framer-motion';
 import { connect } from 'react-redux';
 import { activateAccount } from '../../redux/actions/auth'
@@ -27,12 +27,13 @@ class ActivateAccount extends React.Component {
               <legend className="mb-4">Activate your account!</legend>
               
                 <button 
-                  style={{ margin: '20px auto' }}
-                  className="btn custom-btn purple-btn" 
+                  className="btn custom-btn purple-btn mb-3" 
                   onClick={ this.handleClick }
                 >
                   Activate
                 </button> 
+
+                { this.props.isLoading ? <Spinner className="mt-3" color="primary" /> : ''}
               
             </div>
           </Col>
@@ -43,4 +44,10 @@ class ActivateAccount extends React.Component {
   }
 }
 
-export default connect(null, { activateAccount })(ActivateAccount)
+const mapStateToProps = state => {
+  return {
+    isLoading: state.auth.isLoading
+  }
+}
+
+export default connect(mapStateToProps, { activateAccount })(ActivateAccount)

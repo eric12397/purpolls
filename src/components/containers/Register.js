@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Form, FormGroup } from 'reactstrap';
+import { Row, Col, Form, FormGroup, Spinner } from 'reactstrap';
 import { connect } from 'react-redux';
 import { handleRegistration } from '../../redux/actions/auth';
 import { motion } from 'framer-motion';
@@ -81,10 +81,12 @@ class Register extends React.Component {
 
                 
                 <button
-                style={{ margin: '20px auto' }} 
-                className="btn custom-btn purple-btn" 
+                
+                className="btn custom-btn purple-btn mb-2" 
                 type="submit">Sign Up</button>
                 
+                { this.props.isLoading ? <Spinner color="primary" /> : ''}
+          
                 <div>
                   <small className="text-muted">Already have an account? 
                     <Link className="ml-2" to="/login">Log In</Link>
@@ -95,7 +97,6 @@ class Register extends React.Component {
                     <Link to="/reset-password"> account</Link> ?
                   </small>
                 </div>
-                
             </Form>
           </Col>
         </Row>
@@ -104,4 +105,10 @@ class Register extends React.Component {
   }
 }
 
-export default connect(null, { handleRegistration })(Register)
+const mapStateToProps = state => {
+  return {
+    isLoading: state.auth.isLoading
+  }
+}
+
+export default connect(mapStateToProps, { handleRegistration })(Register)

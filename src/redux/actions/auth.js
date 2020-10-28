@@ -14,7 +14,11 @@ import {
   RECOVER_USERNAME,
   PASSWORD_RESET_REQUESTED,
   PASSWORD_RESET_CONFIRMED,
-  ACCOUNT_ACTIVATED
+  REGISTER_ACCOUNT_PENDING,
+  REGISTER_ACCOUNT_SUCCESS,
+  REGISTER_ACCOUNT_FAILURE,
+  ACTIVATE_ACCOUNT_PENDING,
+  ACTIVATE_ACCOUNT_SUCCESS
 } from './types.js'
 
 export const loadCurrentUser = () => (dispatch, getState) => {
@@ -36,18 +40,22 @@ export const loadCurrentUser = () => (dispatch, getState) => {
 
 export const handleRegistration = (data, history) => dispatch => {
   if (data.password === data.confirmed_password) {
-    
+    dispatch({ type: REGISTER_ACCOUNT_PENDING })
     axiosInstance.post('/auth/users/', {
-    username: data.username,
-    email: data.email,
-    password: data.password,
-    confirmed_password: data.confirmed_password
-  })
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      confirmed_password: data.confirmed_password
+    })
     .then(response => {
+      dispatch({ type: REGISTER_ACCOUNT_SUCCESS })
       dispatch(addNewUser(response.data))
       dispatch(createMessage({ activationEmailSent: 'A link has been sent to your email to activate your new account!' }))
     })
-    .catch(error => dispatch(getErrors(error.response)))
+    .catch(error => { 
+      dispatch({ type: REGISTER_ACCOUNT_FAILURE })
+      dispatch(getErrors(error.response))
+    })
   } else {
     dispatch(createMessage({ passwordsMustMatch: "The two password fields didn't match." }))
   }
@@ -55,13 +63,14 @@ export const handleRegistration = (data, history) => dispatch => {
 }
 
 export const activateAccount = (uid, token, history) => dispatch => {
+  dispatch({ type: ACTIVATE_ACCOUNT_PENDING })
   axiosInstance.post('/auth/users/activation/', {
     uid,
     token
   })
     .then(response => {
       history.push('/login')
-      dispatch({ type: ACCOUNT_ACTIVATED })
+      dispatch({ type: ACTIVATE_ACCOUNT_SUCCESS })
       dispatch(createMessage({ accountActivated: 'Your account has now been activated. Log in with your new credentials.'}))
     })
     .catch(error => console.log(error.response))
