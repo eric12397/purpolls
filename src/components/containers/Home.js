@@ -7,8 +7,7 @@ class Home extends React.Component {
 
     return (
       <motion.div
-        animate={{opacity: 1, y: 0}}
-        exit={{opacity: 0, y: '100vh'}}
+        exit={{opacity: 0}}
         transition={ pageTransition } 
       >
         <PollList />

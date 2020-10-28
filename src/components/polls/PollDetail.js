@@ -18,7 +18,9 @@ import { deletePoll, togglePollLike, togglePollDislike } from '../../redux/actio
 
 class PollDetail extends React.Component {
 	state = {
-    showModal: false
+    showModal: false,
+    slideRight: false,
+    slideLeft: false
 	}
 
 	toggleLike = () => {
@@ -66,6 +68,14 @@ class PollDetail extends React.Component {
     }
   }
 
+  slideLeft = () => {
+    this.setState({ slideLeft: true, slideRight: false })
+  }
+
+  slideRight = () => {
+    this.setState({ slideRight: true, slideLeft: false })
+  }
+
 	render() { 
     const poll = this.props.poll ? (
         <article className="media content-section" >   
@@ -90,7 +100,7 @@ class PollDetail extends React.Component {
             <div style={ choicesContainer }>
               <div className="page-transition-left-btn active hover">
                 <Link to={`/polls/${this.getPreviousPoll()}`}>
-                  <AiOutlineDoubleLeft />
+                  <AiOutlineDoubleLeft onClick={ this.slideLeft }/>
                 </Link>
               </div>
               
@@ -102,7 +112,7 @@ class PollDetail extends React.Component {
               
               <div className="page-transition-right-btn active hover">
                 <Link to={`/polls/${this.getNextPoll()}`}>
-                  <AiOutlineDoubleRight />
+                  <AiOutlineDoubleRight onClick={ this.slideRight }/>
                 </Link>
               </div>
             </div>
@@ -142,16 +152,19 @@ class PollDetail extends React.Component {
 
 		return (
       <motion.div
-        initial={{opacity: 0, x: '-100vh'}}
+        initial={{opacity: 0}}
         animate={{opacity: 1, x: 0}}
-        exit={{opacity: 0, x: '-100vh'}} 
+        exit={{
+          opacity: 0, 
+          x: this.state.slideRight ? '-100vh' : '100vh' 
+        }} 
         transition={{transition: 'linear'}}
       >
-      <Row>
-        <Col xs="12" md={{ size: 10, offset: 1 }}>
-				  { poll } 
-        </Col>
-      </Row>
+        <Row>
+          <Col xs="12" md={{ size: 10, offset: 1 }}>
+    			  { poll } 
+          </Col>
+        </Row>
       </motion.div>
 		)
 	}
