@@ -39,7 +39,9 @@ export const loadCurrentUser = () => (dispatch, getState) => {
 }
 
 export const handleRegistration = (data, history) => dispatch => {
-  if (data.password === data.confirmed_password) {
+  if (data.password &&
+      data.confirmed_password &&
+      data.password === data.confirmed_password) {
     dispatch({ type: REGISTER_ACCOUNT_PENDING })
     axiosInstance.post('/auth/users/', {
       username: data.username,
