@@ -1,0 +1,68 @@
+.delete-poll {
+  float: right; 
+  cursor: pointer;
+  font-size: 20px
+}
+
+.page-transition-right {
+  display: block;
+  font-size: 25px;
+  position: absolute;
+  top: 40%;
+  cursor: pointer
+}
+
+.page-transition-left {
+  display: block;
+  font-size: 25px;
+  position: absolute;
+  top: 40%;
+  cursor: pointer
+}
+
+@media (max-width: 576px) {
+    .page-transition-right {
+      right: -24px;
+      font-size: 18px;
+    }
+    .page-transition-left {
+      left: -24px;
+      font-size: 18px;
+    }
+}
+
+@media (min-width: 576px) {
+    .page-transition-right {
+      right: -65px;
+    }
+    .page-transition-left {
+      left: -65px;
+    }
+}
+
+@media (min-width: 768px) {
+    .page-transition-right {
+      right: -65px;
+    }
+    .page-transition-left {
+      left: -65px;
+    }
+}
+
+@media (min-width: 992px) {
+    .page-transition-right {
+      right: -70px;
+    }
+    .page-transition-left {
+      left: -70px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .page-transition-right {
+      right: -80px;
+    }
+    .page-transition-left {
+      left: -80px;
+    }
+}

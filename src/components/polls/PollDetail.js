@@ -1,3 +1,4 @@
+import './PollDetail.css';
 import React from 'react';
 import moment from 'moment';
 import CommentForm from './CommentForm';
@@ -87,7 +88,7 @@ class PollDetail extends React.Component {
               
               { this.props.username === this.props.poll.author ? 
                 <TiDelete 
-                  className="delete-poll-btn"
+                  className="delete-poll"
                   onClick={ this.showModal }/>
                 : '' }
             </div>
@@ -98,7 +99,7 @@ class PollDetail extends React.Component {
               <p> You selected "{ this.props.vote.choice_text }".</p> : ''} 
 
             <div style={ choicesContainer }>
-              <div className="page-transition-left-btn active hover">
+              <div className="page-transition-left active hover">
                 <Link to={`/polls/${this.getPreviousPoll()}`}>
                   <AiOutlineDoubleLeft onClick={ this.slideLeft }/>
                 </Link>
@@ -110,7 +111,7 @@ class PollDetail extends React.Component {
                 vote={ this.props.vote } 
               />
               
-              <div className="page-transition-right-btn active hover">
+              <div className="page-transition-right active hover">
                 <Link to={`/polls/${this.getNextPoll()}`}>
                   <AiOutlineDoubleRight onClick={ this.slideRight }/>
                 </Link>

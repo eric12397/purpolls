@@ -1,4 +1,5 @@
-import React from 'react'
+import './ChoiceItem.css';
+import React from 'react';
 import { connect } from 'react-redux';
 import { handleVote } from '../../redux/actions/polls';
 import { withRouter } from 'react-router';
