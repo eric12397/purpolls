@@ -49,6 +49,8 @@ class AlertSystem extends React.Component {
         alert.success(message.accountActivated)
       } if (message.passwordsMustMatch) {
         alert.error(message.passwordsMustMatch)
+      } if (message.logInFirst) {
+        alert.error(message.logInFirst)
       }
       
     }
