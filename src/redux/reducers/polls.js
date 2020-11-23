@@ -23,9 +23,7 @@ const initialState = {
   pollsDislikeCounters: {},
   pollsLiked: {},
   pollsDisliked: {},
-  userVotes: [],
-  pollLiked: false,
-  pollDisliked: false
+  userVotes: []
 }
 
 // poll reducer

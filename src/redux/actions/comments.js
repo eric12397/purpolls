@@ -12,32 +12,26 @@ import {
   SET_COMMENT_LIKES_AND_DISLIKES
 } from "./types";
 
+// thunks
 export const getComments = pollId => (dispatch, getState) => {
   axiosInstance.get(`/polls/${pollId}/comments/`)
     .then(response => {
-      dispatch({
-        type: GET_COMMENTS,
-        payload: response.data
-      })
+      dispatch(getCommentsSuccess(response.data))
       const { comments } = getState().comments
       dispatch(setCommentLikesAndDislikes(comments))
     })
-
     .catch(error => console.log(error))
 }
 
 export const addComment = (pollId, data) => (dispatch, getState) => {
   const { id: userId } = getState().auth.user
   axiosInstance.post(`/polls/${pollId}/comments/`, {
-      poll_id: pollId,
-      author: userId,
-      comment_text: data.comment
-    })
+    poll_id: pollId,
+    author: userId,
+    comment_text: data.comment
+  })
     .then(response => {
-      dispatch({
-        type: ADD_COMMENT,
-        payload: response.data
-      })
+      dispatch(addCommentSuccess(response.data))
       const { comments } = getState().comments
       dispatch(setCommentLikesAndDislikes(comments))
     })
@@ -47,24 +41,14 @@ export const addComment = (pollId, data) => (dispatch, getState) => {
 export const getUserCommentLikes = pollId => (dispatch, getState) => {
   const { id: userId } = getState().auth.user
   axiosInstance.get(`/users/${userId}/polls/${pollId}/comment-likes/`)
-    .then(response => {
-      dispatch({
-        type: GET_USER_COMMENT_LIKES,
-        payload: response.data
-      })
-    })
+    .then(response => dispatch(getUserCommentLikesSuccess(response.data)))
     .catch(error => console.log(error))
 }
 
 export const getUserCommentDislikes = pollId => (dispatch, getState) => {
   const { id: userId } = getState().auth.user
   axiosInstance.get(`/users/${userId}/polls/${pollId}/comment-dislikes/`)
-    .then(response => {
-      dispatch({
-        type: GET_USER_COMMENT_DISLIKES,
-        payload: response.data
-      })
-    })
+    .then(response => dispatch(getUserCommentDislikesSuccess(response.data)))
     .catch(error => console.log(error))
 }
 
@@ -81,6 +65,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
   const commentDisliked = commentsDisliked[commentId]
   
   if (commentLiked === undefined && commentDisliked === undefined) {
+    dispatch(incrementCommentLikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/likes/`, {
       signal: 'add like',
       user_id: userId,
@@ -88,14 +73,10 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       likes: commentsLikeCounters[commentId] + 1
     })
       .then(response => console.log(response.data))
-
-    dispatch({ 
-      type: INCREMENT_COMMENT_LIKES,
-      payload: commentId
-    })
+      .catch(error => console.log(error))
   }
-
-  if (commentLiked === true && commentDisliked === undefined) {
+  else if (commentLiked === true && commentDisliked === undefined) {
+    dispatch(decrementCommentLikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/likes/`, {
       signal: 'remove like',
       user_id: userId,
@@ -103,14 +84,11 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       likes: commentsLikeCounters[commentId] - 1
     })
       .then(response => console.log(response.data))
-
-    dispatch({
-      type: DECREMENT_COMMENT_LIKES,
-      payload: commentId
-    })
+      .catch(error => console.log(error))
   }
-
-  if (commentLiked === undefined && commentDisliked === true) {
+  else if (commentLiked === undefined && commentDisliked === true) {
+    dispatch(incrementCommentLikes(commentId));
+    dispatch(decrementCommentDislikes(commentId));
     axiosInstance.patch(`/comments/${commentId}/likes/`, {
       signal: 'add like, remove dislike',
       user_id: userId,
@@ -119,15 +97,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       dislikes: commentsDislikeCounters[commentId] - 1
     })
       .then(response => console.log(response.data))
-
-    dispatch({
-      type: INCREMENT_COMMENT_LIKES,
-      payload: commentId
-    })
-    dispatch({
-      type: DECREMENT_COMMENT_DISLIKES,
-      payload: commentId
-    })
+      .catch(error => console.log(error))
   }
 }
 
@@ -144,6 +114,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
   const commentDisliked = commentsDisliked[commentId]
 
   if (commentLiked === undefined && commentDisliked === undefined) {
+    dispatch(incrementCommentDislikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
       signal: 'add dislike',
       user_id: userId,
@@ -151,14 +122,10 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       dislikes: commentsDislikeCounters[commentId] + 1,
     })
       .then(response => console.log(response.data))
-
-    dispatch({
-      type: INCREMENT_COMMENT_DISLIKES,
-      payload: commentId
-    })
+      .catch(error => console.log(error))
   }
-
-  if (commentLiked === undefined && commentDisliked === true) {
+  else if (commentLiked === undefined && commentDisliked === true) {
+    dispatch(decrementCommentDislikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
       signal: 'remove dislike',
       user_id: userId,
@@ -166,14 +133,11 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       dislikes: commentsDislikeCounters[commentId] - 1,
     })
       .then(response => console.log(response.data))
-
-    dispatch({
-      type: DECREMENT_COMMENT_DISLIKES,
-      payload: commentId
-    })
+      .catch(error => console.log(error))
   }
-
-  if (commentLiked === true && commentDisliked === undefined) {
+  else if (commentLiked === true && commentDisliked === undefined) {
+    dispatch(incrementCommentDislikes(commentId));
+    dispatch(decrementCommentLikes(commentId));
     axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
       signal: 'add dislike, remove like',
       user_id: userId,
@@ -182,22 +146,70 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       likes: commentsLikeCounters[commentId] - 1
     })
       .then(response => console.log(response.data))
-
-    dispatch({
-      type: INCREMENT_COMMENT_DISLIKES,
-      payload: commentId
-    })
-    dispatch({
-      type: DECREMENT_COMMENT_LIKES,
-      payload: commentId
-    })
+      .catch(error => console.log(error))
   }
 }
 
+// action creators
+const getCommentsSuccess = comments => {
+  return {
+    type: GET_COMMENTS,
+    payload: comments
+  }
+}
 
 const setCommentLikesAndDislikes = comments => {
   return { 
     type: SET_COMMENT_LIKES_AND_DISLIKES,
     payload: comments 
+  }
+}
+
+const addCommentSuccess = newComment => {
+  return {
+    type: ADD_COMMENT,
+    payload: newComment
+  }
+}
+
+const getUserCommentLikesSuccess = userCommentLikes => {
+  return {
+    type: GET_USER_COMMENT_LIKES,
+    payload: userCommentLikes
+  }
+}
+
+const getUserCommentDislikesSuccess = userCommentDislikes => {
+  return {
+    type: GET_USER_COMMENT_DISLIKES,
+    payload: userCommentDislikes
+  }
+}
+
+const incrementCommentLikes = commentId => {
+  return {
+    type: INCREMENT_COMMENT_LIKES, 
+    payload: commentId 
+  }
+}
+
+const decrementCommentLikes = commentId => {
+  return { 
+    type: DECREMENT_COMMENT_LIKES, 
+    payload: commentId 
+  }
+}
+
+const incrementCommentDislikes = commentId => {
+  return {
+    type: INCREMENT_COMMENT_DISLIKES, 
+    payload: commentId 
+  }
+}
+
+const decrementCommentDislikes = commentId => {
+  return { 
+    type: DECREMENT_COMMENT_DISLIKES, 
+    payload: commentId 
   }
 }

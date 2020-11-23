@@ -3,17 +3,22 @@ import { GET_USERS, ADD_NEW_USER } from './types.js';
 
 export const getUsers = () => dispatch => {
   axiosInstance.get('/users/')
-    .then(response => {
-      dispatch({
-        type: GET_USERS,
-        payload: response.data
-      })
-    }).catch(error => console.log(error))
+    .then(response => dispatch(getUsersSuccess(response.data)))
+    .catch(error => console.log(error))
 }
 
-export const addNewUser = newUser => dispatch => {
-  dispatch({
-    type: ADD_NEW_USER,
-    payload: newUser 
-  })
+const getUsersSuccess = users => {
+  return {
+    type: GET_USERS,
+    payload: users
+  }
 }
+
+export const addNewUser = newUser => {
+  return {
+    type: ADD_NEW_USER,
+    payload: newUser
+  }
+}
+
+

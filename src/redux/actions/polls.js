@@ -14,28 +14,21 @@ import {
   INCREMENT_POLL_DISLIKES,
   DECREMENT_POLL_DISLIKES,
   SET_POLL_LIKES_AND_DISLIKES,
-  GET_ERRORS
+  GET_ERRORS,
+  REMOVE_USER_VOTES,
+  REMOVE_USER_LIKES,
+  REMOVE_USER_DISLIKES
 } from "./types";
 
-const setPollLikesAndDislikes = polls => {
-  return { 
-    type: SET_POLL_LIKES_AND_DISLIKES,
-    payload: polls 
-  }
-}
-
+// thunks
 export const getPolls = () => (dispatch, getState) => {
   axiosInstance.get('/polls/')
     .then(response => {
-      dispatch({
-        type: GET_POLLS,
-        payload: response.data
-      })
-
+      dispatch(getPollsSuccess(response.data))
       const { polls } = getState().polls
       dispatch(setPollLikesAndDislikes(polls))
-
-    }).catch(error => console.log(error))
+    })
+    .catch(error => console.log(error))
 }
 
 export const deletePoll = (pollId, history) => dispatch => {
@@ -43,12 +36,9 @@ export const deletePoll = (pollId, history) => dispatch => {
     .then(response => {
       history.push('/')
       dispatch(createMessage({ pollDeleted: "Poll deleted!"}))
-      dispatch({
-        type: DELETE_POLL,
-        payload: pollId
-      })
-      
-    }).catch(error => console.log(error))
+      dispatch(deletePollSuccess(pollId))
+    })
+    .catch(error => console.log(error))
 }
 
 export const addPoll = (data, history) => (dispatch, getState) => {
@@ -60,15 +50,11 @@ export const addPoll = (data, history) => (dispatch, getState) => {
   })
     .then(response => {
       dispatch(createMessage({ pollCreated: "Poll created successfully!"}))
-      dispatch({
-        type: ADD_POLL,
-        payload: response.data
-      })
+      dispatch(addPollSuccess(response.data))
       history.push('/')
       const { polls } = getState().polls
       dispatch(setPollLikesAndDislikes(polls))
     })
-
     .catch(error => dispatch(getErrors(error.response)))
 }
 
@@ -77,53 +63,33 @@ export const handleVote = (choiceId, pollId, history) => (dispatch, getState) =>
 
   if (isAuthenticated === true) {
     axiosInstance.post(`/polls/${pollId}/votes/`, {
-    selected_choice_id: choiceId,
-    user_id: user.id
-  })
-    .then(response => {
-      console.log(response.data)
-      dispatch({
-        type: HANDLE_VOTE,
-        payload: response.data
-      })
-
-    }).catch(error => console.log(error)) 
-       
+      selected_choice_id: choiceId,
+      user_id: user.id
+    })
+    .then(response => dispatch(handleVoteSuccess(response.data)))
+    .catch(error => console.log(error)) 
   } else {
-    dispatch(createMessage({ logInFirst: "You must log in to vote!"}))
+    dispatch(createMessage({ logInFirst: "You must log in to vote!" }))
     history.push('/login')
   }  
 }
 
 export const getUserVotes = userId => dispatch => {
   axiosInstance.get(`/users/${userId}/votes/`)
-    .then(response => {
-      dispatch({
-        type: GET_USER_VOTES,
-        payload: response.data
-      })
-
-    }).catch(error => console.log(error))
+    .then(response => dispatch(getUserVotesSuccess(response.data)))
+    .catch(error => console.log(error))
 }
 
 export const getUserLikes = userId => dispatch => {
   axiosInstance.get(`/users/${userId}/likes/`)
-    .then(response => {
-      dispatch({
-        type: GET_USER_LIKES,
-        payload: response.data
-      })
-    })
+    .then(response => dispatch(getUserLikesSuccess(response.data)))
+    .catch(error => console.log(error))
 }
 
 export const getUserDislikes = userId => dispatch => {
   axiosInstance.get(`/users/${userId}/dislikes/`)
-    .then(response => {
-      dispatch({
-        type: GET_USER_DISLIKES,
-        payload: response.data
-      })
-    })
+    .then(response => dispatch(getUserDislikesSuccess(response.data)))
+    .catch(error => console.log(error))
 }
 
 export const togglePollLike = pollId => (dispatch, getState) => {
@@ -139,34 +105,28 @@ export const togglePollLike = pollId => (dispatch, getState) => {
   const pollDisliked = pollsDisliked[pollId]
 
   if (pollLiked === undefined && pollDisliked === undefined) {
+    dispatch(incrementPollLikes(pollId))
     axiosInstance.patch(`/polls/${pollId}/likes/`, {
       signal: 'add like',
       user_id: userId,
       likes: pollsLikeCounters[pollId] + 1, 
     })
       .then(response => console.log(response.data))
-
-    dispatch({ 
-      type: INCREMENT_POLL_LIKES, 
-      payload: pollId
-    })    
-  }
-
-  if (pollLiked === true && pollDisliked === undefined) {
+      .catch(error => console.log(error))
+  } 
+  else if (pollLiked === true && pollDisliked === undefined) {
+    dispatch(decrementPollLikes(pollId))
     axiosInstance.patch(`/polls/${pollId}/likes/`, {
       signal: 'remove like',
       user_id: userId,
       likes: pollsLikeCounters[pollId] - 1,
     })
-      .then(response => console.log(response.data)) 
-
-    dispatch({ 
-      type: DECREMENT_POLL_LIKES, 
-      payload: pollId 
-    })    
-  }
-
-  if (pollLiked === undefined && pollDisliked === true) {
+      .then(response => console.log(response.data))
+      .catch(error => console.log(error))
+  } 
+  else if (pollLiked === undefined && pollDisliked === true) {
+    dispatch(incrementPollLikes(pollId));
+    dispatch(decrementPollDislikes(pollId));
     axiosInstance.patch(`/polls/${pollId}/likes/`, {
       signal: 'add like, remove dislike',
       user_id: userId,
@@ -174,15 +134,7 @@ export const togglePollLike = pollId => (dispatch, getState) => {
       dislikes: pollsDislikeCounters[pollId] - 1, 
     })
       .then(response => console.log(response.data))
-
-    dispatch({ 
-      type: INCREMENT_POLL_LIKES, 
-      payload: pollId 
-    })
-    dispatch({ 
-      type: DECREMENT_POLL_DISLIKES,
-      payload: pollId
-    })
+      .catch(error => console.log(error))
   }
 }
 
@@ -199,34 +151,28 @@ export const togglePollDislike = pollId => (dispatch, getState) => {
   const pollDisliked = pollsDisliked[pollId]
   
   if (pollLiked === undefined && pollDisliked === undefined) {
+    dispatch(incrementPollDislikes(pollId))
     axiosInstance.patch(`/polls/${pollId}/dislikes/`, {
       signal: 'add dislike',
       user_id: userId,
       dislikes: pollsDislikeCounters[pollId] + 1
     })
       .then(response => console.log(response.data))
-
-    dispatch({ 
-      type: INCREMENT_POLL_DISLIKES,
-      payload: pollId
-    })
+      .catch(error => console.log(error))
   }
-
-  if (pollLiked === undefined && pollDisliked === true) {
+  else if (pollLiked === undefined && pollDisliked === true) {
+    dispatch(decrementPollDislikes(pollId))
     axiosInstance.patch(`/polls/${pollId}/dislikes/`, {
       signal: 'remove dislike',
       user_id: userId,
       dislikes: pollsDislikeCounters[pollId] - 1
     })
       .then(response => console.log(response.data))
-
-    dispatch({ 
-      type: DECREMENT_POLL_DISLIKES, 
-      payload: pollId 
-    }) 
+      .catch(error => console.log(error))
   }
-
-  if (pollLiked === true && pollDisliked === undefined) {
+  else if (pollLiked === true && pollDisliked === undefined) {
+    dispatch(decrementPollLikes(pollId));
+    dispatch(incrementPollDislikes(pollId));
     axiosInstance.patch(`/polls/${pollId}/dislikes/`, {
       signal: 'add dislike, remove like',
       user_id: userId,
@@ -234,14 +180,103 @@ export const togglePollDislike = pollId => (dispatch, getState) => {
       likes: pollsLikeCounters[pollId] - 1,
     })
       .then(response => console.log(response.data))
-
-    dispatch({ 
-      type: DECREMENT_POLL_LIKES,
-      payload: pollId 
-    })
-    dispatch({ 
-      type: INCREMENT_POLL_DISLIKES, 
-      payload: pollId
-    })
+      .catch(error => console.log(error))
   }
+}
+
+// action creators
+const getPollsSuccess = polls => {
+  return {
+    type: GET_POLLS,
+    payload: polls
+  }
+}
+
+const setPollLikesAndDislikes = polls => {
+  return { 
+    type: SET_POLL_LIKES_AND_DISLIKES,
+    payload: polls 
+  }
+}
+
+const deletePollSuccess = pollId => {
+  return {
+    type: DELETE_POLL,
+    payload: pollId
+  }
+}
+
+const addPollSuccess = newPoll => {
+  return {
+    type: ADD_POLL,
+    payload: newPoll
+  }
+}
+
+const handleVoteSuccess = userVote => {
+  return {
+    type: HANDLE_VOTE,
+    payload: userVote
+  }
+}
+
+const getUserVotesSuccess = userVotes => {
+  return {
+    type: GET_USER_VOTES,
+    payload: userVotes
+  }
+}
+
+const getUserLikesSuccess = userLikes => {
+  return {
+    type: GET_USER_LIKES,
+    payload: userLikes
+  }
+}
+
+const getUserDislikesSuccess = userDislikes => {
+  return {
+    type: GET_USER_DISLIKES,
+    payload: userDislikes
+  }
+}
+
+const incrementPollLikes = pollId => {
+  return {
+    type: INCREMENT_POLL_LIKES, 
+    payload: pollId 
+  }
+}
+
+const decrementPollLikes = pollId => {
+  return { 
+    type: DECREMENT_POLL_LIKES, 
+    payload: pollId 
+  }
+}
+
+const incrementPollDislikes = pollId => {
+  return {
+    type: INCREMENT_POLL_DISLIKES, 
+    payload: pollId 
+  }
+}
+
+const decrementPollDislikes = pollId => {
+  return { 
+    type: DECREMENT_POLL_DISLIKES, 
+    payload: pollId 
+  }
+}
+
+export const removeUserVotes = () => {
+  return { type: REMOVE_USER_VOTES }
+}
+
+export const removeUserLikes = () => {
+  return { type: REMOVE_USER_LIKES }
+}
+
+export const removeUserDislikes = () => {
+  return { type: REMOVE_USER_DISLIKES }
 }

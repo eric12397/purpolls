@@ -1,12 +1,11 @@
 import axiosInstance from '../../axiosInstance';
 import axios from 'axios'
-import { getUserVotes, getUserLikes, getUserDislikes } from './polls';
+import { getUserVotes, getUserLikes, getUserDislikes, removeUserVotes, removeUserLikes, removeUserDislikes } from './polls';
 import { getErrors } from './errors';
 import { createMessage } from './messages';
 import { addNewUser } from './users';
 import { 
   USER_AUTHENTICATED,
-  HANDLE_LOGIN,
   HANDLE_LOGOUT,
   REMOVE_USER_VOTES,
   REMOVE_USER_LIKES,
@@ -21,20 +20,15 @@ import {
   ACTIVATE_ACCOUNT_SUCCESS
 } from './types.js'
 
+// thunks
 export const loadCurrentUser = () => (dispatch, getState) => {
   axiosInstance.get('/auth/current_user/')
     .then(response => {
-      console.log(response)
-      dispatch({
-        type: USER_AUTHENTICATED,
-        payload: response.data
-      })
-
+      dispatch(userAuthSuccess(response.data))
       const { id } = getState().auth.user
       dispatch(getUserVotes(id))
       dispatch(getUserLikes(id))
       dispatch(getUserDislikes(id))
-      
     }).catch(error => console.log(error))
 }
 
@@ -42,7 +36,7 @@ export const handleRegistration = (data, history) => dispatch => {
   if (data.password &&
       data.confirmed_password &&
       data.password === data.confirmed_password) {
-    dispatch({ type: REGISTER_ACCOUNT_PENDING })
+    dispatch(registerAccountPending())
     axiosInstance.post('/auth/users/', {
       username: data.username,
       email: data.email,
@@ -50,29 +44,28 @@ export const handleRegistration = (data, history) => dispatch => {
       confirmed_password: data.confirmed_password
     })
     .then(response => {
-      dispatch({ type: REGISTER_ACCOUNT_SUCCESS })
+      dispatch(registerAccountSuccess())
       dispatch(addNewUser(response.data))
       dispatch(createMessage({ activationEmailSent: 'A link has been sent to your email to activate your new account!' }))
     })
     .catch(error => { 
-      dispatch({ type: REGISTER_ACCOUNT_FAILURE })
+      dispatch(registerAccountFailure())
       dispatch(getErrors(error.response))
     })
   } else {
     dispatch(createMessage({ passwordsMustMatch: "The two password fields didn't match." }))
   }
-  
 }
 
 export const activateAccount = (uid, token, history) => dispatch => {
-  dispatch({ type: ACTIVATE_ACCOUNT_PENDING })
+  dispatch(activateAccountPending())
   axiosInstance.post('/auth/users/activation/', {
     uid,
     token
   })
     .then(response => {
       history.push('/login')
-      dispatch({ type: ACTIVATE_ACCOUNT_SUCCESS })
+      dispatch(activateAccountSuccess())
       dispatch(createMessage({ accountActivated: 'Your account has now been activated. Log in with your new credentials.'}))
     })
     .catch(error => console.log(error.response))
@@ -84,11 +77,7 @@ export const handleLogin = (data, history) => (dispatch, getState) => {
     password: data.password
   })
     .then(response => {
-      dispatch({
-        type: HANDLE_LOGIN,
-        payload: response.data
-      })
-
+      dispatch(userAuthSuccess(response.data))
       const { id, username } = getState().auth.user
       dispatch(createMessage({ loginSuccess: `Welcome ${username}! You have successfully logged in.`}))
       dispatch(getUserVotes(id))
@@ -99,17 +88,16 @@ export const handleLogin = (data, history) => (dispatch, getState) => {
       localStorage.setItem('accessToken', response.data.access);
       localStorage.setItem('refreshToken', response.data.refresh);
       history.push('/')
-
     }).catch(error => dispatch(getErrors(error.response)))
 }
 
 export const handleLogout = () => dispatch => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
-  dispatch({ type: HANDLE_LOGOUT })
-  dispatch({ type: REMOVE_USER_VOTES })
-  dispatch({ type: REMOVE_USER_LIKES })
-  dispatch({ type: REMOVE_USER_DISLIKES })
+  dispatch(handleLogoutSuccess())
+  dispatch(removeUserVotes())
+  dispatch(removeUserLikes())
+  dispatch(removeUserDislikes())
 }
 
 export const requestPasswordReset = (email) => dispatch => {
@@ -117,10 +105,9 @@ export const requestPasswordReset = (email) => dispatch => {
       email
     })
     .then(response => {
+      dispatch(passwordResetRequested())
       dispatch(createMessage({ passwordResetRequested: 'An email request has been sent to reset your password! '}))
-      dispatch({ type: PASSWORD_RESET_REQUESTED })
     })
-
     .catch(error => dispatch(getErrors(error.response)))
 }
 
@@ -133,9 +120,48 @@ export const confirmPasswordReset = (uid, token, new_password, re_new_password, 
     })
     .then(response => {
       history.push('/login')
-      dispatch(createMessage({ passwordResetConfirmed: 'You can now log in with your new password!'}))
-      dispatch({ type: PASSWORD_RESET_CONFIRMED })
+      dispatch(passwordResetConfirmed())
+      dispatch(createMessage({ passwordResetConfirmed: 'You can now log in with your new password!' }))
     })
-
     .catch(error => dispatch(getErrors(error.response))) 
+}
+
+// action creators
+const userAuthSuccess = user => {
+  return {
+    type: USER_AUTHENTICATED,
+    payload: user
+  }
+}
+
+const registerAccountPending = () => {
+  return { type: REGISTER_ACCOUNT_PENDING }
+}
+
+const registerAccountSuccess = () => {
+  return { type: REGISTER_ACCOUNT_SUCCESS }
+}
+
+const registerAccountFailure = () => {
+  return { type: REGISTER_ACCOUNT_FAILURE }
+}
+
+const activateAccountPending = () => {
+  return { type: ACTIVATE_ACCOUNT_PENDING }
+}
+
+const activateAccountSuccess = () => {
+  return { type: ACTIVATE_ACCOUNT_SUCCESS }
+}
+
+const passwordResetRequested = () => {
+  return { type: PASSWORD_RESET_REQUESTED }
+}
+
+const passwordResetConfirmed = () => {
+  return { type: PASSWORD_RESET_CONFIRMED }
+}
+
+const handleLogoutSuccess = () => {
+  return { type: HANDLE_LOGOUT }
 }
