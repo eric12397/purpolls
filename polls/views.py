@@ -74,33 +74,33 @@ def like_poll(request, poll_id):
 	user = User.objects.get(pk=request.data['user_id'])
 	poll = Poll.objects.get(pk=poll_id)
 
-	if request.method == 'PATCH':
-		if request.data['signal'] == 'add like':
-			if not Like.objects.filter(user=user, poll=poll).exists():
-				Like.objects.create(user=user, poll=poll)
-				response = "Added like on Poll: " + str(poll.question_text)
-			
-		if request.data['signal'] == 'add like, remove dislike':
-			if not Like.objects.filter(user=user, poll=poll).exists():
-				Like.objects.create(user=user, poll=poll)
-				Dislike.objects.get(user=user, poll=poll).delete()
-				response = "Added like and removed dislike on Poll: " + str(poll.question_text)
+	
+	if request.data['signal'] == 'add like':
+		if not Like.objects.filter(user=user, poll=poll).exists():
+			Like.objects.create(user=user, poll=poll)
+			response = "Added like on Poll: " + str(poll.question_text)
+		
+	elif request.data['signal'] == 'add like, remove dislike':
+		if not Like.objects.filter(user=user, poll=poll).exists():
+			Like.objects.create(user=user, poll=poll)
+			Dislike.objects.get(user=user, poll=poll).delete()
+			response = "Added like and removed dislike on Poll: " + str(poll.question_text)
 
-		if request.data['signal'] == 'remove like':
-			Like.objects.get(user=user, poll=poll).delete()
-			response = "Removed like on Poll: " + str(poll.question_text)
+	elif request.data['signal'] == 'remove like':
+		Like.objects.get(user=user, poll=poll).delete()
+		response = "Removed like on Poll: " + str(poll.question_text)
 
 
-		poll_serializer = PollAndChoicesSerializer(poll, data=request.data, partial=True) # set partial=True to update a data partially
-		if poll_serializer.is_valid():
-		    poll_serializer.save()
-		    return Response({ 
-		    	'response': response,
-		    	'updated_likes': poll_serializer.data['likes'],
-		    	'updated_dislikes': poll_serializer.data['dislikes']
-		    })
-		else:
-			return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	poll_serializer = PollAndChoicesSerializer(poll, data=request.data, partial=True) # set partial=True to update a data partially
+	if poll_serializer.is_valid():
+	    poll_serializer.save()
+	    return Response({ 
+	    	'response': response,
+	    	'updated_likes': poll_serializer.data['likes'],
+	    	'updated_dislikes': poll_serializer.data['dislikes']
+	    })
+	else:
+		return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PATCH'])
@@ -109,33 +109,33 @@ def dislike_poll(request, poll_id):
 	user = User.objects.get(pk=request.data['user_id'])
 	poll = Poll.objects.get(pk=poll_id)
 
-	if request.method == 'PATCH':
-		if request.data['signal'] == 'add dislike':
-			if not Dislike.objects.filter(user=user, poll=poll).exists():
-				Dislike.objects.create(user=user, poll=poll)
-				response = "Added dislike on Poll: " + str(poll.question_text)
+	
+	if request.data['signal'] == 'add dislike':
+		if not Dislike.objects.filter(user=user, poll=poll).exists():
+			Dislike.objects.create(user=user, poll=poll)
+			response = "Added dislike on Poll: " + str(poll.question_text)
 
-		if request.data['signal'] == 'add dislike, remove like':
-			if not Dislike.objects.filter(user=user, poll=poll).exists():
-				Dislike.objects.create(user=user, poll=poll)
-				Like.objects.get(user=user, poll=poll).delete()
-				response = "Added dislike and removed like on Poll: " + str(poll.question_text)
+	elif request.data['signal'] == 'add dislike, remove like':
+		if not Dislike.objects.filter(user=user, poll=poll).exists():
+			Dislike.objects.create(user=user, poll=poll)
+			Like.objects.get(user=user, poll=poll).delete()
+			response = "Added dislike and removed like on Poll: " + str(poll.question_text)
 
-		if request.data['signal'] == 'remove dislike':
-			Dislike.objects.get(user=user, poll=poll).delete()
-			response = "Removed dislike on Poll: " + str(poll.question_text)
+	elif request.data['signal'] == 'remove dislike':
+		Dislike.objects.get(user=user, poll=poll).delete()
+		response = "Removed dislike on Poll: " + str(poll.question_text)
 
 
-		poll_serializer = PollAndChoicesSerializer(poll, data=request.data, partial=True) # set partial=True to update a data partially
-		if poll_serializer.is_valid():
-			poll_serializer.save()
-			return Response({
-				"response": response,
-				'updated_likes': poll_serializer.data['likes'],
-				'updated_dislikes': poll_serializer.data['dislikes']
-			})	
-		else:
-			return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	poll_serializer = PollAndChoicesSerializer(poll, data=request.data, partial=True) # set partial=True to update a data partially
+	if poll_serializer.is_valid():
+		poll_serializer.save()
+		return Response({
+			"response": response,
+			'updated_likes': poll_serializer.data['likes'],
+			'updated_dislikes': poll_serializer.data['dislikes']
+		})	
+	else:
+		return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
