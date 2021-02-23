@@ -1,11 +1,13 @@
 from .models import Poll, Choice, Vote, Like, Dislike
 from .serializers import PollAndChoicesSerializer, ChoiceSerializer, VoteSerializer, LikeSerializer, DislikeSerializer
+from enums.Signal import Signal
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -75,18 +77,18 @@ def like_poll(request, poll_id):
 	poll = Poll.objects.get(pk=poll_id)
 
 	
-	if request.data['signal'] == 'add like':
+	if request.data['signal'] == Signal.ADD_LIKE: #enum
 		if not Like.objects.filter(user=user, poll=poll).exists():
 			Like.objects.create(user=user, poll=poll)
 			response = "Added like on Poll: " + str(poll.question_text)
 		
-	elif request.data['signal'] == 'add like, remove dislike':
+	elif request.data['signal'] == Signal.ADD_LIKE_AND_REMOVE_DISLIKE:
 		if not Like.objects.filter(user=user, poll=poll).exists():
 			Like.objects.create(user=user, poll=poll)
 			Dislike.objects.get(user=user, poll=poll).delete()
 			response = "Added like and removed dislike on Poll: " + str(poll.question_text)
 
-	elif request.data['signal'] == 'remove like':
+	elif request.data['signal'] == Signal.REMOVE_LIKE:
 		Like.objects.get(user=user, poll=poll).delete()
 		response = "Removed like on Poll: " + str(poll.question_text)
 
@@ -110,18 +112,18 @@ def dislike_poll(request, poll_id):
 	poll = Poll.objects.get(pk=poll_id)
 
 	
-	if request.data['signal'] == 'add dislike':
+	if request.data['signal'] == Signal.ADD_DISLIKE:
 		if not Dislike.objects.filter(user=user, poll=poll).exists():
 			Dislike.objects.create(user=user, poll=poll)
 			response = "Added dislike on Poll: " + str(poll.question_text)
 
-	elif request.data['signal'] == 'add dislike, remove like':
+	elif request.data['signal'] == Signal.ADD_DISLIKE_AND_REMOVE_LIKE:
 		if not Dislike.objects.filter(user=user, poll=poll).exists():
 			Dislike.objects.create(user=user, poll=poll)
 			Like.objects.get(user=user, poll=poll).delete()
 			response = "Added dislike and removed like on Poll: " + str(poll.question_text)
 
-	elif request.data['signal'] == 'remove dislike':
+	elif request.data['signal'] == Signal.REMOVE_DISLIKE:
 		Dislike.objects.get(user=user, poll=poll).delete()
 		response = "Removed dislike on Poll: " + str(poll.question_text)
 
