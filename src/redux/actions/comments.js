@@ -9,7 +9,13 @@ import {
   DECREMENT_COMMENT_LIKES,
   INCREMENT_COMMENT_DISLIKES,
   DECREMENT_COMMENT_DISLIKES,
-  SET_COMMENT_LIKES_AND_DISLIKES
+  SET_COMMENT_LIKES_AND_DISLIKES,
+  ADD_LIKE,
+  ADD_LIKE_AND_REMOVE_DISLIKE,
+  REMOVE_LIKE,
+  ADD_DISLIKE,
+  ADD_DISLIKE_AND_REMOVE_LIKE,
+  REMOVE_DISLIKE
 } from "./types";
 
 // thunks
@@ -67,7 +73,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
   if (commentLiked === undefined && commentDisliked === undefined) {
     dispatch(incrementCommentLikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/likes/`, {
-      signal: 'add like',
+      signal: ADD_LIKE,
       user_id: userId,
       poll_id: pollId,
       likes: commentsLikeCounters[commentId] + 1
@@ -78,7 +84,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
   else if (commentLiked === true && commentDisliked === undefined) {
     dispatch(decrementCommentLikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/likes/`, {
-      signal: 'remove like',
+      signal: REMOVE_LIKE,
       user_id: userId,
       poll_id: pollId,
       likes: commentsLikeCounters[commentId] - 1
@@ -90,7 +96,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
     dispatch(incrementCommentLikes(commentId));
     dispatch(decrementCommentDislikes(commentId));
     axiosInstance.patch(`/comments/${commentId}/likes/`, {
-      signal: 'add like, remove dislike',
+      signal: ADD_LIKE_AND_REMOVE_DISLIKE,
       user_id: userId,
       poll_id: pollId,
       likes: commentsLikeCounters[commentId] + 1,
@@ -116,7 +122,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
   if (commentLiked === undefined && commentDisliked === undefined) {
     dispatch(incrementCommentDislikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
-      signal: 'add dislike',
+      signal: ADD_DISLIKE,
       user_id: userId,
       poll_id: pollId,
       dislikes: commentsDislikeCounters[commentId] + 1,
@@ -127,7 +133,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
   else if (commentLiked === undefined && commentDisliked === true) {
     dispatch(decrementCommentDislikes(commentId))
     axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
-      signal: 'remove dislike',
+      signal: REMOVE_DISLIKE,
       user_id: userId,
       poll_id: pollId,
       dislikes: commentsDislikeCounters[commentId] - 1,
@@ -139,7 +145,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
     dispatch(incrementCommentDislikes(commentId));
     dispatch(decrementCommentLikes(commentId));
     axiosInstance.patch(`/comments/${commentId}/dislikes/`, {
-      signal: 'add dislike, remove like',
+      signal: ADD_DISLIKE_AND_REMOVE_LIKE,
       user_id: userId,
       poll_id: pollId,
       dislikes: commentsDislikeCounters[commentId] + 1, 

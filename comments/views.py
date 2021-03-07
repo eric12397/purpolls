@@ -1,5 +1,6 @@
 from .models import Comment, CommentLike, CommentDislike
 from polls.models import Poll
+from enums.signal import Signal
 from .serializers import CommentSerializer, CommentLikeSerializer, CommentDislikeSerializer
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
@@ -43,18 +44,18 @@ def like_comment(request, comment_id):
 	comment = Comment.objects.get(pk=comment_id)
 
 	
-	if request.data['signal'] == 'add like':
+	if request.data['signal'] == Signal.ADD_LIKE:
 		if not CommentLike.objects.filter(user=user, poll=poll, comment=comment).exists():
 			CommentLike.objects.create(user=user, poll=poll, comment=comment)
 			response = "Added like on Comment: " + str(comment.comment_text)
 
-	if request.data['signal'] == 'add like, remove dislike':
+	if request.data['signal'] == Signal.ADD_LIKE_AND_REMOVE_DISLIKE:
 		if not CommentLike.objects.filter(user=user, poll=poll, comment=comment).exists():
 			CommentLike.objects.create(user=user, poll=poll, comment=comment)
 			CommentDislike.objects.get(user=user, poll=poll, comment=comment).delete()
 			response = "Added like, removed dislike on Comment: " + str(comment.comment_text) 
 
-	if request.data['signal'] == 'remove like':
+	if request.data['signal'] == Signal.REMOVE_LIKE:
 		CommentLike.objects.get(user=user, poll=poll, comment=comment).delete()
 		response = "Removed liked on Comment: " + str(comment.comment_text)
 
@@ -78,18 +79,18 @@ def dislike_comment(request, comment_id):
 	comment = Comment.objects.get(pk=comment_id)
 
 	
-	if request.data['signal'] == 'add dislike':
+	if request.data['signal'] == Signal.ADD_DISLIKE:
 		if not CommentDislike.objects.filter(user=user, poll=poll, comment=comment).exists():
 			CommentDislike.objects.create(user=user, poll=poll, comment=comment)
 			response = "Added dislike on Comment: " + str(comment.comment_text) 
 
-	elif request.data['signal'] == 'add dislike, remove like':
+	elif request.data['signal'] == Signal.ADD_DISLIKE_AND_REMOVE_LIKE:
 		if not CommentDislike.objects.filter(user=user, poll=poll, comment=comment).exists():
 			CommentDislike.objects.create(user=user, poll=poll, comment=comment)
 			CommentLike.objects.get(user=user, poll=poll, comment=comment).delete()
 			response = "Added dislike, removed like on Comment: " + str(comment.comment_text) 
 
-	elif request.data['signal'] == 'remove dislike':
+	elif request.data['signal'] == Signal.REMOVE_DISLIKE:
 		CommentDislike.objects.get(user=user, poll=poll, comment=comment).delete()
 		response = "Removed dislike on Comment: " + str(comment.comment_text) 
 
