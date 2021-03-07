@@ -1,8 +1,6 @@
 from enum import Enum
 
-
 class Signal(str, Enum):
-	
 	ADD_LIKE = "ADD_LIKE"
 	ADD_LIKE_AND_REMOVE_DISLIKE = "ADD_LIKE_AND_REMOVE_DISLIKE"
 	REMOVE_LIKE = "REMOVE_LIKE"

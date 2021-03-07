@@ -1,6 +1,6 @@
 from .models import Poll, Choice, Vote, Like, Dislike
 from .serializers import PollAndChoicesSerializer, ChoiceSerializer, VoteSerializer, LikeSerializer, DislikeSerializer
-from enums.Signal import Signal
+from enums.signal import Signal
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
