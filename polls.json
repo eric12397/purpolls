@@ -1,0 +1,14 @@
+base dir path C:\Users\eric1\purpolls
+[
+{
+    "model": "polls.poll",
+    "pk": 1,
+    "fields": {
+        "question_text": "Who's winning NBA MVP this year?",
+        "date_posted": "2021-03-31T20:14:29.046Z",
+        "author": 1,
+        "likes": 0,
+        "dislikes": 0
+    }
+}
+]
