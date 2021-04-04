@@ -56,9 +56,9 @@ class UserProfile extends React.Component {
   }
 
   render() {
-    const totalPolls = this.props.userPolls.length;
     let totalRenown = 0;
-    this.props.userPolls.map((poll, index) => {
+    
+    this.props.userPolls.forEach((poll, index) => {
       for (let i=0; i < poll.choices.length; i++) {
         totalRenown += poll.choices[i].votes
       }
@@ -67,12 +67,14 @@ class UserProfile extends React.Component {
       totalRenown -= poll.dislikes; 
     })
 
+    const totalPolls = this.props.userPolls.length;
+
     const userProfile = this.props.userProfile ? (
       <Row>
         <Col lg="4">
           <div className="content-section">
           <div className="media article-metadata">
-            <img className="rounded-circle account-img" src={this.state.image}/>
+            <img className="rounded-circle account-img" src={this.state.image} alt="profile-pic"/>
             <div className="media-body mt-3" style={{ overflow: 'hidden' }}>
               <h2 className="account-heading">{ this.props.userProfile.username }</h2> 
               <p className="text-secondary">{ this.props.userProfile.email }</p>
