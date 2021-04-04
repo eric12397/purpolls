@@ -1,5 +1,4 @@
 import axiosInstance from '../../axiosInstance';
-import axios from 'axios'
 import { getUserVotes, getUserLikes, getUserDislikes, removeUserVotes, removeUserLikes, removeUserDislikes } from './polls';
 import { getErrors } from './errors';
 import { createMessage } from './messages';
@@ -7,10 +6,6 @@ import { addNewUser } from './users';
 import { 
   USER_AUTHENTICATED,
   HANDLE_LOGOUT,
-  REMOVE_USER_VOTES,
-  REMOVE_USER_LIKES,
-  REMOVE_USER_DISLIKES,
-  RECOVER_USERNAME,
   PASSWORD_RESET_REQUESTED,
   PASSWORD_RESET_CONFIRMED,
   REGISTER_ACCOUNT_PENDING,

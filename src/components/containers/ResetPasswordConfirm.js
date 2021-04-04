@@ -1,8 +1,7 @@
-import React from 'react'
-import { Link, Redirect } from 'react-router-dom';
+import React from 'react';
 import { Row, Col, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
-import { confirmPasswordReset } from '../../redux/actions/auth'
+import { confirmPasswordReset } from '../../redux/actions/auth';
 import { motion } from 'framer-motion';
 
 class ResetPasswordConfirm extends React.Component {
