@@ -127,13 +127,13 @@ class PollDetail extends React.Component {
             <div className="mb-3" style={{ float: 'left' }}>
               
               <LikePoll 
-                likes={ this.props.likes } 
+                likes={ this.props.poll.likes } 
                 pollLiked={ this.props.pollLiked }
                 toggleLike={ this.toggleLike }  
               />
 
               <DislikePoll
-                dislikes={ this.props.dislikes }
+                dislikes={ this.props.poll.dislikes }
                 pollDisliked={ this.props.pollDisliked }
                 toggleDislike={ this.toggleDislike }
               />
@@ -182,8 +182,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     polls: state.polls.polls,
     poll: state.polls.polls.find(poll => poll.id === pollId),
-    likes: state.polls.pollsLikeCounters[pollId],
-    dislikes: state.polls.pollsDislikeCounters[pollId],
     pollLiked: state.polls.pollsLiked[pollId],
     pollDisliked: state.polls.pollsDisliked[pollId],
     vote: state.polls.userVotes.find(vote => vote.poll === pollId),

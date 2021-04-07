@@ -19,7 +19,5 @@ urlpatterns = [
 
 
 	path('api/polls/<poll_id>/votes/', views.vote_poll),
-	path('api/polls/<poll_id>/likes/', views.like_poll),
-	path('api/polls/<poll_id>/dislikes/', views.dislike_poll)	
-
+	path('api/polls/<poll_id>/likes/', views.like_poll)
 ]

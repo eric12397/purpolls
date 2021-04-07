@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 
-
 User = get_user_model()
 
 class PollListAPI(generics.ListCreateAPIView):
@@ -76,70 +75,50 @@ def like_poll(request, poll_id):
 	user = User.objects.get(pk=request.data['user_id'])
 	poll = Poll.objects.get(pk=poll_id)
 
-	
 	if request.data['signal'] == Signal.ADD_LIKE: #enum
-		if not Like.objects.filter(user=user, poll=poll).exists():
-			Like.objects.create(user=user, poll=poll)
-			response = "Added like on Poll: " + str(poll.question_text)
+		Like.objects.create(user=user, poll=poll)
+		poll.likes += 1
+		poll.save()
+		msg = "Added like on Poll: " + str(poll.question_text)
 		
 	elif request.data['signal'] == Signal.ADD_LIKE_AND_REMOVE_DISLIKE:
-		if not Like.objects.filter(user=user, poll=poll).exists():
-			Like.objects.create(user=user, poll=poll)
-			Dislike.objects.get(user=user, poll=poll).delete()
-			response = "Added like and removed dislike on Poll: " + str(poll.question_text)
+		Like.objects.create(user=user, poll=poll)
+		Dislike.objects.get(user=user, poll=poll).delete()
+		poll.likes += 1
+		poll.dislikes -= 1
+		poll.save()
+		msg = "Added like and removed dislike on Poll: " + str(poll.question_text)
 
 	elif request.data['signal'] == Signal.REMOVE_LIKE:
 		Like.objects.get(user=user, poll=poll).delete()
-		response = "Removed like on Poll: " + str(poll.question_text)
+		poll.likes -= 1
+		poll.save()
+		msg = "Removed like on Poll: " + str(poll.question_text)
 
-
-	poll_serializer = PollAndChoicesSerializer(poll, data=request.data, partial=True) # set partial=True to update a data partially
-	if poll_serializer.is_valid():
-	    poll_serializer.save()
-	    return Response({ 
-	    	'response': response,
-	    	'updated_likes': poll_serializer.data['likes'],
-	    	'updated_dislikes': poll_serializer.data['dislikes']
-	    })
-	else:
-		return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['PATCH'])
-#@permission_classes([IsAuthenticated])
-def dislike_poll(request, poll_id):
-	user = User.objects.get(pk=request.data['user_id'])
-	poll = Poll.objects.get(pk=poll_id)
-
-	
-	if request.data['signal'] == Signal.ADD_DISLIKE:
-		if not Dislike.objects.filter(user=user, poll=poll).exists():
-			Dislike.objects.create(user=user, poll=poll)
-			response = "Added dislike on Poll: " + str(poll.question_text)
+	elif request.data['signal'] == Signal.ADD_DISLIKE:
+		Dislike.objects.create(user=user, poll=poll)
+		poll.dislikes += 1
+		poll.save()
+		msg = "Added dislike on Poll: " + str(poll.question_text)
 
 	elif request.data['signal'] == Signal.ADD_DISLIKE_AND_REMOVE_LIKE:
-		if not Dislike.objects.filter(user=user, poll=poll).exists():
-			Dislike.objects.create(user=user, poll=poll)
-			Like.objects.get(user=user, poll=poll).delete()
-			response = "Added dislike and removed like on Poll: " + str(poll.question_text)
+		Like.objects.get(user=user, poll=poll).delete()
+		Dislike.objects.create(user=user, poll=poll)
+		poll.likes -= 1
+		poll.dislikes += 1
+		poll.save()
+		msg = "Added dislike and removed like on Poll: " + str(poll.question_text)
 
 	elif request.data['signal'] == Signal.REMOVE_DISLIKE:
 		Dislike.objects.get(user=user, poll=poll).delete()
-		response = "Removed dislike on Poll: " + str(poll.question_text)
+		poll.dislikes -= 1
+		poll.save()
+		msg = "Removed dislike on Poll: " + str(poll.question_text)
 
-
-	poll_serializer = PollAndChoicesSerializer(poll, data=request.data, partial=True) # set partial=True to update a data partially
-	if poll_serializer.is_valid():
-		poll_serializer.save()
-		return Response({
-			"response": response,
-			'updated_likes': poll_serializer.data['likes'],
-			'updated_dislikes': poll_serializer.data['dislikes']
-		})	
-	else:
-		return Response(poll_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-	
-
+	poll_serializer = PollAndChoicesSerializer(poll)
+	return Response({ 
+		'response': msg,
+		'poll': poll_serializer.data,
+		'updated_likes': poll_serializer.data['likes'],
+		'updated_dislikes': poll_serializer.data['dislikes']
+	})
