@@ -9,10 +9,12 @@ import {
   REMOVE_USER_VOTES,
   REMOVE_USER_LIKES,
   REMOVE_USER_DISLIKES,
-  DECREMENT_POLL_LIKES,
-  INCREMENT_POLL_LIKES,
-  INCREMENT_POLL_DISLIKES,
-  DECREMENT_POLL_DISLIKES
+  ADD_LIKE,
+  REMOVE_LIKE,
+  ADD_DISLIKE,
+  REMOVE_DISLIKE,
+  ADD_LIKE_AND_REMOVE_DISLIKE,
+  ADD_DISLIKE_AND_REMOVE_LIKE
 } from '../actions/types.js'
 
 const initialState = {
@@ -96,7 +98,7 @@ export default function(state = initialState, action) {
         userVotes: [ action.payload.vote, ...state.userVotes ]
       }
 
-    case INCREMENT_POLL_LIKES:
+    case ADD_LIKE:
       return {
         ...state,
         polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
@@ -106,7 +108,7 @@ export default function(state = initialState, action) {
         }
       }
 
-    case DECREMENT_POLL_LIKES:
+    case REMOVE_LIKE:
       return {
         ...state, 
         polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
@@ -116,7 +118,7 @@ export default function(state = initialState, action) {
         }
       }
 
-    case INCREMENT_POLL_DISLIKES:
+    case ADD_DISLIKE:
       return {
         ...state, 
         polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
@@ -126,13 +128,41 @@ export default function(state = initialState, action) {
         }
       }
 
-    case DECREMENT_POLL_DISLIKES:
+    case REMOVE_DISLIKE:
       return {
         ...state,
         polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
         pollsDisliked: {
           ...state.pollsDisliked,
           [action.payload.poll.id]: undefined
+        }
+      }
+
+    case ADD_LIKE_AND_REMOVE_DISLIKE:
+      return {
+        ...state,
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
+        pollsLiked: {
+          ...state.pollsLiked,
+          [action.payload.poll.id]: true
+        },
+        pollsDisliked: {
+          ...state.pollsDisliked,
+          [action.payload.poll.id]: undefined
+        }
+      }
+
+    case ADD_DISLIKE_AND_REMOVE_LIKE:
+      return {
+        ...state,
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
+        pollsLiked: {
+          ...state.pollsLiked,
+          [action.payload.poll.id]: undefined
+        },
+        pollsDisliked: {
+          ...state.pollsDisliked,
+          [action.payload.poll.id]: true
         }
       }
 
