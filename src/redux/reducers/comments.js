@@ -3,49 +3,27 @@ import {
   ADD_COMMENT,
   GET_USER_COMMENT_LIKES,
   GET_USER_COMMENT_DISLIKES,
-  INCREMENT_COMMENT_LIKES,
-  DECREMENT_COMMENT_LIKES,
-  INCREMENT_COMMENT_DISLIKES,
-  DECREMENT_COMMENT_DISLIKES,
-  SET_COMMENT_LIKES_AND_DISLIKES
-
+  ADD_LIKE_ON_COMMENT,
+  ADD_LIKE_AND_REMOVE_DISLIKE_ON_COMMENT,
+  REMOVE_LIKE_ON_COMMENT,
+  ADD_DISLIKE_ON_COMMENT,
+  ADD_DISLIKE_AND_REMOVE_LIKE_ON_COMMENT,
+  REMOVE_DISLIKE_ON_COMMENT
 } from '../actions/types.js'
 
 const initialState = {
   comments: [],
-  commentsLikeCounters: {},
-  commentsDislikeCounters: {},
   commentsLiked: {},
   commentsDisliked: {}
-  
 }
 
 export default function(state = initialState, action) {
   switch(action.type) {
 
     case GET_COMMENTS:
-      let comments = action.payload
       return {
         ...state,
-        comments: comments
-      }
-
-    case SET_COMMENT_LIKES_AND_DISLIKES:
-      return {
-        ...state,
-        commentsLikeCounters: action.payload.reduce((rest, comment) => {
-          return {
-            ...rest,
-            [comment.id]: comment.likes
-          }
-        }, {}),
-        
-        commentsDislikeCounters: action.payload.reduce((rest, comment) => {
-          return {
-            ...rest, 
-            [comment.id]: comment.dislikes
-          }
-        }, {}),
+        comments: action.payload
       }
 
     case ADD_COMMENT:
@@ -76,56 +54,72 @@ export default function(state = initialState, action) {
         }, {})
       }
 
-    case INCREMENT_COMMENT_LIKES:
+    case ADD_LIKE_ON_COMMENT:
       return {
         ...state,
-        commentsLikeCounters: {
-          ...state.commentsLikeCounters,
-          [action.payload]: state.commentsLikeCounters[action.payload] + 1
-        },
+        comments: state.comments.map(comment => comment.id === action.payload.comment.id ? action.payload.comment : comment),
         commentsLiked: {
           ...state.commentsLiked,
-          [action.payload]: true
-        } 
+          [action.payload.comment.id]: true
+        }
       }
 
-    case DECREMENT_COMMENT_LIKES:
+    case REMOVE_LIKE_ON_COMMENT:
       return {
-        ...state,
-        commentsLikeCounters: {
-          ...state.commentsLikeCounters,
-          [action.payload]: state.commentsLikeCounters[action.payload] - 1
-        },
+        ...state, 
+        comments: state.comments.map(comment => comment.id === action.payload.comment.id ? action.payload.comment : comment),
         commentsLiked: {
           ...state.commentsLiked,
-          [action.payload]: undefined
-        } 
+          [action.payload.comment.id]: undefined
+        }
       }
 
-    case INCREMENT_COMMENT_DISLIKES:
+    case ADD_DISLIKE_ON_COMMENT:
+      return {
+        ...state, 
+        comments: state.comments.map(comment => comment.id === action.payload.comment.id ? action.payload.comment : comment),
+        commentsDisliked: {
+          ...state.commentsDisliked,
+          [action.payload.comment.id]: true
+        }
+      }
+
+    case REMOVE_DISLIKE_ON_COMMENT:
       return {
         ...state,
-        commentsDislikeCounters: {
-          ...state.commentsDislikeCounters,
-          [action.payload]: state.commentsDislikeCounters[action.payload] + 1
+        comments: state.comments.map(comment => comment.id === action.payload.comment.id ? action.payload.comment : comment),
+        commentsDisliked: {
+          ...state.commentsDisliked,
+          [action.payload.comment.id]: undefined
+        }
+      }
+
+    case ADD_LIKE_AND_REMOVE_DISLIKE_ON_COMMENT:
+      return {
+        ...state,
+        comments: state.comments.map(comment => comment.id === action.payload.comment.id ? action.payload.comment : comment),
+        commentsLiked: {
+          ...state.commentsLiked,
+          [action.payload.comment.id]: true
         },
         commentsDisliked: {
           ...state.commentsDisliked,
-          [action.payload]: true
-        } 
+          [action.payload.comment.id]: undefined
+        }
       }
 
-    case DECREMENT_COMMENT_DISLIKES:
+    case ADD_DISLIKE_AND_REMOVE_LIKE_ON_COMMENT:
       return {
         ...state,
-        commentsDislikeCounters: {
-          ...state.commentsDislikeCounters,
-          [action.payload]: state.commentsDislikeCounters[action.payload] - 1
+        comments: state.comments.map(comment => comment.id === action.payload.comment.id ? action.payload.comment : comment),
+        commentsLiked: {
+          ...state.commentsLiked,
+          [action.payload.comment.id]: undefined
         },
         commentsDisliked: {
           ...state.commentsDisliked,
-          [action.payload]: undefined
-        } 
+          [action.payload.comment.id]: true
+        }
       }
 
     default:

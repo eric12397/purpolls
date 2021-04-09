@@ -9,7 +9,5 @@ urlpatterns = [
 	path('api/users/<user_id>/polls/<poll_id>/comment-likes/', GetCommentLikesAPI.as_view()),
 	path('api/users/<user_id>/polls/<poll_id>/comment-dislikes/', GetCommentDislikesAPI.as_view()),
 
-	path('api/comments/<comment_id>/likes/', views.like_comment),
-	path('api/comments/<comment_id>/dislikes/', views.dislike_comment),
+	path('api/comments/<comment_id>/likes/', views.like_comment)
 ]
-############################################################################################

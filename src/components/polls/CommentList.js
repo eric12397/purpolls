@@ -26,9 +26,7 @@ class CommentList extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    comments: state.comments.comments,
-    userCommentLikes: state.comments.userCommentLikes,
-    userCommentDislikes: state.comments.userCommentDislikes
+    comments: state.comments.comments
   }
 }
 export default connect(mapStateToProps, { getComments, getUserCommentLikes, getUserCommentDislikes })(CommentList)

@@ -206,42 +206,42 @@ const getUserDislikesSuccess = userDislikes => {
   }
 }
 
-const addLike = poll => {
+export const addLike = poll => {
   return {
     type: ADD_LIKE,
     payload: poll 
   }
 }
 
-const removeLike = poll => {
+export const removeLike = poll => {
   return { 
     type: REMOVE_LIKE, 
     payload: poll 
   }
 }
 
-const addDislike = poll => {
+export const addDislike = poll => {
   return {
     type: ADD_DISLIKE, 
     payload: poll 
   }
 }
 
-const removeDislike = poll => {
+export const removeDislike = poll => {
   return { 
     type: REMOVE_DISLIKE, 
     payload: poll 
   }
 }
 
-const addLikeAndRemoveDislike = poll => {
+export const addLikeAndRemoveDislike = poll => {
   return {
     type: ADD_LIKE_AND_REMOVE_DISLIKE,
     payload: poll
   }
 }
 
-const addDislikeAndRemoveLike = poll => {
+export const addDislikeAndRemoveLike = poll => {
   return {
     type: ADD_DISLIKE_AND_REMOVE_LIKE,
     payload: poll
