@@ -5,7 +5,8 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
-from .models import Poll
+from polls.models import Poll, Vote, Like, Dislike
+from enums.signal import Signal
 
 User = get_user_model()
 
@@ -32,10 +33,9 @@ class PollsTestCase(APITestCase):
         ]
 
         for choice in choices:
-            print(choice)
             cls.poll.choice_set.create(choice_text=choice["choice_text"])
 
-    def test_should_get_polls(self):
+    def test_should_get_all_polls(self):
         response = self.client.get('/api/polls/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -57,3 +57,45 @@ class PollsTestCase(APITestCase):
     def test_should_delete_poll(self):
         response = self.client.delete('/api/polls/1/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_should_vote_on_poll(self):
+        data = {
+            "selected_choice_id": 1,
+            "user_id": 1
+        }
+        response = self.client.post('/api/polls/1/votes/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Vote.objects.count(), 1)
+
+    def test_should_get_all_votes_for_specific_user(self):
+        response = self.client.get('/api/users/1/votes/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_should_like_poll(self):
+        data = {
+            "signal": Signal.ADD_LIKE,
+            "user_id": 1
+        }
+        response = self.client.patch('/api/polls/1/likes/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Like.objects.count(), 1)
+
+    def test_should_get_all_likes_for_specific_user(self):
+        response = self.client.get('/api/users/1/likes/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_should_dislike_poll(self):
+        data = {
+            "signal": Signal.ADD_DISLIKE,
+            "user_id": 1
+        }
+        response = self.client.patch('/api/polls/1/likes/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Dislike.objects.count(), 1)
+
+    def test_should_get_all_dislikes_for_specific_user(self):
+        response = self.client.get('/api/users/1/dislikes/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        
+
