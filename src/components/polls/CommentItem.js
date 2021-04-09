@@ -23,8 +23,10 @@ class CommentItem extends React.Component {
 		const {
 			comment_text: comment,
 			date_posted: datePosted,
-			author
-		  } = this.props.comment
+			author,
+      likes,
+      dislikes
+		} = this.props.comment
 			 
 		return (
 			<div className="article-metadata">
@@ -34,15 +36,13 @@ class CommentItem extends React.Component {
 
         <div style={ commentBtnContainer }>
   				<LikeComment 
-            comment={ this.props.comment } 
-            likes={ this.props.likes }
+            likes={ likes }
             commentLiked={ this.props.commentLiked }
             toggleLike={ this.toggleLike }
           />	
 
-          <DislikeComment
-            comment={ this.props.comment } 
-            dislikes={ this.props.dislikes }
+          <DislikeComment 
+            dislikes={ dislikes }
             commentDisliked={ this.props.commentDisliked }
             toggleDislike={ this.toggleDislike }
           />
@@ -66,8 +66,6 @@ const commentBtnContainer = {
 const mapStateToProps = (state, ownProps) => {
   const commentId = parseInt(ownProps.comment.id);
   return {
-    likes: state.comments.commentsLikeCounters[commentId],
-    dislikes: state.comments.commentsDislikeCounters[commentId],
     commentLiked: state.comments.commentsLiked[commentId],
     commentDisliked: state.comments.commentsDisliked[commentId]
   }

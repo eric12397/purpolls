@@ -9,18 +9,16 @@ import {
   REMOVE_USER_VOTES,
   REMOVE_USER_LIKES,
   REMOVE_USER_DISLIKES,
-  DECREMENT_POLL_LIKES,
-  INCREMENT_POLL_LIKES,
-  INCREMENT_POLL_DISLIKES,
-  DECREMENT_POLL_DISLIKES,
-  SET_POLL_LIKES_AND_DISLIKES,
-
+  ADD_LIKE,
+  REMOVE_LIKE,
+  ADD_DISLIKE,
+  REMOVE_DISLIKE,
+  ADD_LIKE_AND_REMOVE_DISLIKE,
+  ADD_DISLIKE_AND_REMOVE_LIKE
 } from '../actions/types.js'
 
 const initialState = {
   polls: [],
-  pollsLikeCounters: {},
-  pollsDislikeCounters: {},
   pollsLiked: {},
   pollsDisliked: {},
   userVotes: []
@@ -33,23 +31,6 @@ export default function(state = initialState, action) {
       return {
         ...state,
         polls: action.payload,
-      }
-
-    case SET_POLL_LIKES_AND_DISLIKES:
-      return {
-        ...state,
-        pollsLikeCounters: action.payload.reduce((rest, poll) => {
-          return {
-            ...rest,
-            [poll.id]: poll.likes
-          }
-        }, {}),
-        pollsDislikeCounters: action.payload.reduce((rest, poll) => {
-          return {
-            ...rest,
-            [poll.id]: poll.dislikes
-          }
-        }, {}) 
       }
 
     case GET_USER_VOTES: 
@@ -117,55 +98,71 @@ export default function(state = initialState, action) {
         userVotes: [ action.payload.vote, ...state.userVotes ]
       }
 
-    case INCREMENT_POLL_LIKES:
+    case ADD_LIKE:
       return {
         ...state,
-        pollsLikeCounters: {
-          ...state.pollsLikeCounters,
-          [action.payload]: state.pollsLikeCounters[action.payload] + 1
-        },
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
         pollsLiked: {
           ...state.pollsLiked,
-          [action.payload]: true
+          [action.payload.poll.id]: true
         }
       }
 
-    case DECREMENT_POLL_LIKES:
+    case REMOVE_LIKE:
       return {
         ...state, 
-        pollsLikeCounters: {
-          ...state.pollsLikeCounters,
-          [action.payload]: state.pollsLikeCounters[action.payload] - 1
-        },
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
         pollsLiked: {
           ...state.pollsLiked,
-          [action.payload]: undefined
+          [action.payload.poll.id]: undefined
         }
       }
 
-    case INCREMENT_POLL_DISLIKES:
+    case ADD_DISLIKE:
       return {
         ...state, 
-        pollsDislikeCounters: {
-          ...state.pollsDislikeCounters,
-          [action.payload]: state.pollsDislikeCounters[action.payload] + 1
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
+        pollsDisliked: {
+          ...state.pollsDisliked,
+          [action.payload.poll.id]: true
+        }
+      }
+
+    case REMOVE_DISLIKE:
+      return {
+        ...state,
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
+        pollsDisliked: {
+          ...state.pollsDisliked,
+          [action.payload.poll.id]: undefined
+        }
+      }
+
+    case ADD_LIKE_AND_REMOVE_DISLIKE:
+      return {
+        ...state,
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
+        pollsLiked: {
+          ...state.pollsLiked,
+          [action.payload.poll.id]: true
         },
         pollsDisliked: {
           ...state.pollsDisliked,
-          [action.payload]: true
+          [action.payload.poll.id]: undefined
         }
       }
 
-    case DECREMENT_POLL_DISLIKES:
+    case ADD_DISLIKE_AND_REMOVE_LIKE:
       return {
         ...state,
-        pollsDislikeCounters: {
-          ...state.pollsDislikeCounters,
-          [action.payload]: state.pollsDislikeCounters[action.payload] - 1
+        polls: state.polls.map(poll => poll.id === action.payload.poll.id ? action.payload.poll : poll),
+        pollsLiked: {
+          ...state.pollsLiked,
+          [action.payload.poll.id]: undefined
         },
         pollsDisliked: {
           ...state.pollsDisliked,
-          [action.payload]: undefined
+          [action.payload.poll.id]: true
         }
       }
 
