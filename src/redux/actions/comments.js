@@ -64,7 +64,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       user_id: userId,
       poll_id: pollId
     })
-      .then(response => addLike(response.data))
+      .then(response => dispatch(addLike(response.data)))
       .catch(error => console.log(error))
   }
   else if (commentLiked === true && commentDisliked === undefined) {
@@ -73,7 +73,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       user_id: userId,
       poll_id: pollId
     })
-      .then(response => removeLike(response.data))
+      .then(response => dispatch(removeLike(response.data)))
       .catch(error => console.log(error))
   }
   else if (commentLiked === undefined && commentDisliked === true) {
@@ -82,7 +82,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       user_id: userId,
       poll_id: pollId
     })
-      .then(response => addLikeAndRemoveDislike(response.data))
+      .then(response => dispatch(addLikeAndRemoveDislike(response.data)))
       .catch(error => console.log(error))
   }
 }
@@ -100,7 +100,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       user_id: userId,
       poll_id: pollId
     })
-      .then(response => addDislike(response.data))
+      .then(response => dispatch(addDislike(response.data)))
       .catch(error => console.log(error))
   }
   else if (commentLiked === undefined && commentDisliked === true) {
@@ -109,7 +109,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       user_id: userId,
       poll_id: pollId
     })
-      .then(response => removeDislike(response.data))
+      .then(response => dispatch(removeDislike(response.data)))
       .catch(error => console.log(error))
   }
   else if (commentLiked === true && commentDisliked === undefined) {
@@ -118,7 +118,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       user_id: userId,
       poll_id: pollId
     })
-      .then(response => addDislikeAndRemoveLike(response.data))
+      .then(response => dispatch(addDislikeAndRemoveLike(response.data)))
       .catch(error => console.log(error))
   }
 }
