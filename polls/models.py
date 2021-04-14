@@ -23,7 +23,6 @@ class Choice(models.Model):
 	class Meta:
 		ordering = ['id']
 
-	@property
 	def get_percent(self):
 		choices = Choice.objects.filter(poll=self.poll) # filters all related choices by poll 
 		votes = []
@@ -70,4 +69,4 @@ class Dislike(models.Model):
 		unique_together = ("poll", "user")
 
 	def __str__(self):
-		return self.user.username + " disliked Poll " + str(self.poll.id)
+		return self.user.username + " disliked Poll: " + str(self.poll.question_text)
