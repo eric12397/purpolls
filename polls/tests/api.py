@@ -264,18 +264,18 @@ class CreateLikeTest(APITestCase):
         }
 
     def test_should_create_like(self):
-        response = self.client.patch('/api/polls/1/likes/', self.valid_data, format='json')
+        response = self.client.post('/api/polls/1/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Like.objects.count(), 1)
         self.assertEqual(Poll.objects.get(pk=1).likes, 1)
 
     def test_should_fail_to_create_like_with_invalid_poll_id(self):
-        response = self.client.patch('/api/polls/1000/likes/', self.valid_data, format='json')
+        response = self.client.post('/api/polls/1000/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
 
     def test_should_fail_to_create_like_with_invalid_user_id(self):
-        response = self.client.patch('/api/polls/1/likes/', self.invalid_data, format='json')
+        response = self.client.post('/api/polls/1/likes/', self.invalid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
 
@@ -330,17 +330,17 @@ class CreateDislikeTest(APITestCase):
         }
 
     def test_should_create_dislike(self):
-        response = self.client.patch('/api/polls/1/likes/', self.valid_data, format='json')
+        response = self.client.post('/api/polls/1/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Dislike.objects.count(), 1)
 
     def test_should_fail_to_create_dislike_with_invalid_poll_id(self):
-        response = self.client.patch('/api/polls/1000/likes/', self.valid_data, format='json')
+        response = self.client.post('/api/polls/1000/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
 
     def test_should_fail_to_create_dislike_with_invalid_user_id(self):
-        response = self.client.patch('/api/polls/1/likes/', self.invalid_data, format='json')
+        response = self.client.post('/api/polls/1/likes/', self.invalid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
 

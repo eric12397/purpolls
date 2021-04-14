@@ -78,7 +78,7 @@ def vote_poll(request, poll_id):
 	})
 	 
 		
-@api_view(['PATCH'])
+@api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def like_poll(request, poll_id):
 	try:
