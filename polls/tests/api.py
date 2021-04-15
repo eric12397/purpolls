@@ -1,7 +1,4 @@
-import datetime
 from django.test import TestCase
-from django.utils import timezone
-from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -250,7 +247,8 @@ class CreateLikeTest(APITestCase):
 
         cls.poll = Poll.objects.create(
             author=cls.user,
-            question_text="Who's winning NBA MVP this year?"
+            question_text="Who's winning NBA MVP this year?",
+            likes=100
         )
 
         cls.valid_data = {
@@ -263,21 +261,75 @@ class CreateLikeTest(APITestCase):
             "user_id": 30
         }
 
-    def test_should_create_like(self):
+    def test_should_create_like_and_increment_like_counter(self):
         response = self.client.post('/api/polls/1/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Like.objects.count(), 1)
-        self.assertEqual(Poll.objects.get(pk=1).likes, 1)
+        self.assertEqual(Poll.objects.get(pk=1).likes, 101)
 
     def test_should_fail_to_create_like_with_invalid_poll_id(self):
         response = self.client.post('/api/polls/1000/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(Poll.objects.get(pk=1).likes, 100)
 
     def test_should_fail_to_create_like_with_invalid_user_id(self):
         response = self.client.post('/api/polls/1/likes/', self.invalid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(Poll.objects.get(pk=1).likes, 100)
+
+
+class DeleteLikeTest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username="BodegaCat", 
+            password="IAmBodegaCat", 
+            email="bodegacat@company.com"
+        )
+
+        cls.poll = Poll.objects.create(
+            author=cls.user,
+            question_text="Who's winning NBA MVP this year?",
+            likes=100,
+            dislikes=100
+        )
+
+        cls.like = Like.objects.create(
+            poll=cls.poll,
+            user=cls.user
+        )
+
+        cls.remove_like_data = {
+            "signal": Signal.REMOVE_LIKE,
+            "user_id": 1
+        }
+
+        cls.add_dislike_and_remove_like_data = {
+            "signal": Signal.ADD_DISLIKE_AND_REMOVE_LIKE,
+            "user_id": 1
+        }
+
+    def test_should_delete_existing_like_and_decrement_like_counter(self):
+        response = self.client.post('/api/polls/1/likes/', self.remove_like_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        poll = Poll.objects.get(pk=1)
+        self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(poll.likes, 99)
+        self.assertEqual(Dislike.objects.count(), 0)
+        self.assertEqual(poll.dislikes, 100)
+
+    def test_should_delete_existing_like_and_decrement_like_counter_by_creating_dislike(self):
+        response = self.client.post('/api/polls/1/likes/', self.add_dislike_and_remove_like_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        poll = Poll.objects.get(pk=1)
+        self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(poll.likes, 99)
+        self.assertEqual(Dislike.objects.count(), 1)
+        self.assertEqual(poll.dislikes, 101)
 
 
 class GetAllDislikesForUserTest(APITestCase):
@@ -316,7 +368,8 @@ class CreateDislikeTest(APITestCase):
 
         cls.poll = Poll.objects.create(
             author=cls.user,
-            question_text="Who's winning NBA MVP this year?"
+            question_text="Who's winning NBA MVP this year?",
+            dislikes=100
         )
 
         cls.valid_data = {
@@ -329,20 +382,73 @@ class CreateDislikeTest(APITestCase):
             "user_id": 30
         }
 
-    def test_should_create_dislike(self):
+    def test_should_create_dislike_and_increment_dislike_counter(self):
         response = self.client.post('/api/polls/1/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Dislike.objects.count(), 1)
+        self.assertEqual(Poll.objects.get(pk=1).dislikes, 101)
 
     def test_should_fail_to_create_dislike_with_invalid_poll_id(self):
         response = self.client.post('/api/polls/1000/likes/', self.valid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(Poll.objects.get(pk=1).dislikes, 100)
 
     def test_should_fail_to_create_dislike_with_invalid_user_id(self):
         response = self.client.post('/api/polls/1/likes/', self.invalid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(Poll.objects.get(pk=1).dislikes, 100)
 
 
-# class LikeAndDislikeCountersTest(self):
+class DeleteDislikeTest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username="BodegaCat", 
+            password="IAmBodegaCat", 
+            email="bodegacat@company.com"
+        )
+
+        cls.poll = Poll.objects.create(
+            author=cls.user,
+            question_text="Who's winning NBA MVP this year?",
+            likes=100,
+            dislikes=100
+        )
+
+        cls.dislike = Dislike.objects.create(
+            poll=cls.poll,
+            user=cls.user
+        )
+
+        cls.remove_dislike_data = {
+            "signal": Signal.REMOVE_DISLIKE,
+            "user_id": 1
+        }
+
+        cls.add_like_and_remove_dislike_data = {
+            "signal": Signal.ADD_LIKE_AND_REMOVE_DISLIKE,
+            "user_id": 1
+        }
+
+    def test_should_delete_existing_dislike_and_decrement_dislike_counter(self):
+        response = self.client.post('/api/polls/1/likes/', self.remove_dislike_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        poll = Poll.objects.get(pk=1)
+        self.assertEqual(Dislike.objects.count(), 0)
+        self.assertEqual(poll.dislikes, 99)
+        self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(poll.likes, 100)
+        
+
+    def test_should_delete_existing_dislike_and_decrement_dislike_counter_by_creating_like(self):
+        response = self.client.post('/api/polls/1/likes/', self.add_like_and_remove_dislike_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        poll = Poll.objects.get(pk=1)
+        self.assertEqual(Dislike.objects.count(), 0)
+        self.assertEqual(poll.dislikes, 99)
+        self.assertEqual(Like.objects.count(), 1)
+        self.assertEqual(poll.likes, 101)
