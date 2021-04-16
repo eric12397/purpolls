@@ -11,6 +11,32 @@ class Poll(models.Model): # each class is its own table, each attribute is its o
 	likes = models.IntegerField(default=0)
 	dislikes = models.IntegerField(default=0)
 
+	def increment_likes(self):
+		self.likes += 1
+		self.save()
+
+	def decrement_likes(self):
+		self.likes -= 1
+		self.save()
+
+	def increment_dislikes(self):
+		self.dislikes += 1
+		self.save()
+
+	def decrement_dislikes(self):
+		self.dislikes -= 1
+		self.save()
+
+	def increment_likes_and_decrement_dislikes(self):
+		self.likes += 1
+		self.dislikes -= 1
+		self.save()
+
+	def increment_dislikes_and_decrement_likes(self):
+		self.dislikes += 1
+		self.likes -= 1
+		self.save()
+
 	def __str__(self):
 		return self.question_text
 
@@ -22,6 +48,10 @@ class Choice(models.Model):
 
 	class Meta:
 		ordering = ['id']
+
+	def increment_votes(self):
+		self.votes += 1
+		self.save()
 
 	def get_percent(self):
 		choices = Choice.objects.filter(poll=self.poll) # filters all related choices by poll 
