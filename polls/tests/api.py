@@ -93,10 +93,11 @@ class DeletePollTest(APITestCase):
         for choice in choices:
             cls.poll.choice_set.create(choice_text=choice["choice_text"])
     
-    def test_should_delete_poll(self):
+    def test_should_delete_poll_and_its_choices(self):
         response = self.client.delete('/api/polls/1/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Poll.objects.count(), 0)
+        self.assertEqual(Choice.objects.count(), 0)
 
     def test_should_fail_to_delete_poll(self):
         response = self.client.delete('/api/polls/1000/')
