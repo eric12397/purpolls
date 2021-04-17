@@ -13,6 +13,32 @@ class Comment(models.Model):
 	likes = models.IntegerField(default=0)
 	dislikes = models.IntegerField(default=0)
 
+	def increment_likes(self):
+		self.likes += 1
+		self.save()
+
+	def decrement_likes(self):
+		self.likes -= 1
+		self.save()
+
+	def increment_dislikes(self):
+		self.dislikes += 1
+		self.save()
+
+	def decrement_dislikes(self):
+		self.dislikes -= 1
+		self.save()
+
+	def increment_likes_and_decrement_dislikes(self):
+		self.likes += 1
+		self.dislikes -= 1
+		self.save()
+
+	def increment_dislikes_and_decrement_likes(self):
+		self.dislikes += 1
+		self.likes -= 1
+		self.save()
+
 	def __str__(self):
 		return self.comment_text
 

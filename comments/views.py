@@ -45,42 +45,34 @@ def like_comment(request, comment_id):
 
 	if request.data['signal'] == Signal.ADD_LIKE:
 		CommentLike.objects.create(user=user, poll=poll, comment=comment)
-		comment.likes += 1
-		comment.save()
+		comment.increment_likes()
 		msg = "Added like on Comment: " + str(comment.comment_text)
 
 	elif request.data['signal'] == Signal.ADD_LIKE_AND_REMOVE_DISLIKE:
 		CommentLike.objects.create(user=user, poll=poll, comment=comment)
 		CommentDislike.objects.get(user=user, poll=poll, comment=comment).delete()
-		comment.likes += 1
-		comment.dislikes -= 1
-		comment.save()
+		comment.increment_likes_and_decrement_dislikes()
 		msg = "Added like, removed dislike on Comment: " + str(comment.comment_text) 
 
 	elif request.data['signal'] == Signal.REMOVE_LIKE:
 		CommentLike.objects.get(user=user, poll=poll, comment=comment).delete()
-		comment.likes -= 1
-		comment.save()
+		comment.decrement_likes()
 		msg = "Removed liked on Comment: " + str(comment.comment_text)
 
 	elif request.data['signal'] == Signal.ADD_DISLIKE:
 		CommentDislike.objects.create(user=user, poll=poll, comment=comment)
-		comment.dislikes += 1
-		comment.save()
+		comment.increment_dislikes()
 		msg = "Added dislike on Comment: " + str(comment.comment_text) 
 
 	elif request.data['signal'] == Signal.ADD_DISLIKE_AND_REMOVE_LIKE:
 		CommentDislike.objects.create(user=user, poll=poll, comment=comment)
 		CommentLike.objects.get(user=user, poll=poll, comment=comment).delete()
-		comment.likes -= 1
-		comment.dislikes += 1
-		comment.save()
+		comment.increment_dislikes_and_decrement_likes()
 		msg = "Added dislike, removed like on Comment: " + str(comment.comment_text) 
 
 	elif request.data['signal'] == Signal.REMOVE_DISLIKE:
 		CommentDislike.objects.get(user=user, poll=poll, comment=comment).delete()
-		comment.dislikes -= 1
-		comment.save()
+		comment.decrement_dislikes()
 		msg = "Removed dislike on Comment: " + str(comment.comment_text)
 
 	comment_serializer = CommentSerializer(comment)
