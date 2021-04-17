@@ -36,7 +36,7 @@ class GetCommentDislikesAPI(generics.ListAPIView):
 		return CommentDislike.objects.filter(user=user_id, poll=poll_id)
 
 
-@api_view(['PATCH'])
+@api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def like_comment(request, comment_id):
 	user = User.objects.get(pk=request.data['user_id'])

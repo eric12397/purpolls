@@ -59,7 +59,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
   const commentDisliked = commentsDisliked[commentId]
   
   if (commentLiked === undefined && commentDisliked === undefined) {
-    axiosInstance.patch(`/comments/${commentId}/likes/`, {
+    axiosInstance.post(`/comments/${commentId}/likes/`, {
       signal: ADD_LIKE,
       user_id: userId,
       poll_id: pollId
@@ -68,7 +68,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       .catch(error => console.log(error))
   }
   else if (commentLiked === true && commentDisliked === undefined) {
-    axiosInstance.patch(`/comments/${commentId}/likes/`, {
+    axiosInstance.post(`/comments/${commentId}/likes/`, {
       signal: REMOVE_LIKE,
       user_id: userId,
       poll_id: pollId
@@ -77,7 +77,7 @@ export const toggleCommentLike = (commentId, pollId) => (dispatch, getState) => 
       .catch(error => console.log(error))
   }
   else if (commentLiked === undefined && commentDisliked === true) {
-    axiosInstance.patch(`/comments/${commentId}/likes/`, {
+    axiosInstance.post(`/comments/${commentId}/likes/`, {
       signal: ADD_LIKE_AND_REMOVE_DISLIKE,
       user_id: userId,
       poll_id: pollId
@@ -95,7 +95,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
   const commentDisliked = commentsDisliked[commentId]
 
   if (commentLiked === undefined && commentDisliked === undefined) {
-    axiosInstance.patch(`/comments/${commentId}/likes/`, {
+    axiosInstance.post(`/comments/${commentId}/likes/`, {
       signal: ADD_DISLIKE,
       user_id: userId,
       poll_id: pollId
@@ -104,7 +104,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       .catch(error => console.log(error))
   }
   else if (commentLiked === undefined && commentDisliked === true) {
-    axiosInstance.patch(`/comments/${commentId}/likes/`, {
+    axiosInstance.post(`/comments/${commentId}/likes/`, {
       signal: REMOVE_DISLIKE,
       user_id: userId,
       poll_id: pollId
@@ -113,7 +113,7 @@ export const toggleCommentDislike = (commentId, pollId) => (dispatch, getState) 
       .catch(error => console.log(error))
   }
   else if (commentLiked === true && commentDisliked === undefined) {
-    axiosInstance.patch(`/comments/${commentId}/likes/`, {
+    axiosInstance.post(`/comments/${commentId}/likes/`, {
       signal: ADD_DISLIKE_AND_REMOVE_LIKE,
       user_id: userId,
       poll_id: pollId
