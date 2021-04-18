@@ -2,7 +2,7 @@ from .models import Comment, CommentLike, CommentDislike
 from polls.models import Poll
 from enums.signal import Signal
 from .serializers import CommentSerializer, CommentLikeSerializer, CommentDislikeSerializer
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -39,10 +39,21 @@ class GetCommentDislikesAPI(generics.ListAPIView):
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def like_comment(request, comment_id):
-	user = User.objects.get(pk=request.data['user_id'])
-	poll = Poll.objects.get(pk=request.data['poll_id'])
-	comment = Comment.objects.get(pk=comment_id)
+	try:
+		comment = Comment.objects.get(pk=comment_id)
+	except Comment.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
 
+	try:
+		poll = Poll.objects.get(pk=request.data['poll_id'])
+	except Poll.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+
+	try: 
+		user = User.objects.get(pk=request.data['user_id'])
+	except User.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+	
 	if request.data['signal'] == Signal.ADD_LIKE:
 		CommentLike.objects.create(user=user, poll=poll, comment=comment)
 		comment.increment_likes()
@@ -74,6 +85,9 @@ def like_comment(request, comment_id):
 		CommentDislike.objects.get(user=user, poll=poll, comment=comment).delete()
 		comment.decrement_dislikes()
 		msg = "Removed dislike on Comment: " + str(comment.comment_text)
+
+	else:
+		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 	comment_serializer = CommentSerializer(comment)
 	return Response({ 
