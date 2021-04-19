@@ -5,18 +5,18 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class PollModelTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user(
+    def setUp(self):
+        self.user = User.objects.create_user(
             username="BodegaCat", 
             password="IAmBodegaCat", 
             email="bodegacat@company.com"
         )
-        cls.user.save()
 
-        cls.poll = Poll.objects.create(
+        self.poll = Poll.objects.create(
             question_text="Who is the GOAT?", 
-            author=cls.user
+            author=self.user,
+            likes=100,
+            dislikes=100
         )
 
     def test_model_str(self):
@@ -46,10 +46,36 @@ class PollModelTest(TestCase):
         self.user.delete()
         self.assertEqual(Poll.objects.count(), 0)
 
+    def test_increment_likes(self):
+        self.poll.increment_likes()
+        self.assertEqual(self.poll.likes, 101)
+
+    def test_decrement_likes(self):
+        self.poll.decrement_likes()
+        self.assertEqual(self.poll.likes, 99)
+
+    def test_increment_dislikes(self):
+        self.poll.increment_dislikes()
+        self.assertEqual(self.poll.dislikes, 101)
+
+    def test_decrement_dislikes(self):
+        self.poll.decrement_dislikes()
+        self.assertEqual(self.poll.dislikes, 99)
+
+    def test_increment_likes_and_decrement_dislikes(self):
+        self.poll.increment_likes_and_decrement_dislikes()
+        self.assertEqual(self.poll.likes, 101)
+        self.assertEqual(self.poll.dislikes, 99)
+
+    def test_increment_dislikes_and_decrement_likes(self):
+        self.poll.increment_dislikes_and_decrement_likes()
+        self.assertEqual(self.poll.likes, 99)
+        self.assertEqual(self.poll.dislikes, 101)
+
 
 class ChoiceModelTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
             username="BodegaCat", 
             password="IAmBodegaCat", 
             email="bodegacat@company.com"
@@ -79,14 +105,7 @@ class ChoiceModelTest(TestCase):
         self.assertEqual(str(self.choice_1), "Michael Jordan")
         self.assertEqual(str(self.choice_2), "Lebron James")
         self.assertNotEqual(str(self.choice_3), "Lebron James")
-
-    def test_get_percent_returns_correct_values(self):
-        self.assertEqual(self.choice_1.get_percent(), 60)
-        self.assertEqual(self.choice_2.get_percent(), 40)
-
-    def test_get_percent_returns_0(self):
-        self.assertEqual(self.choice_3.get_percent(), 0)
-
+        
     def test_choice_text_verbose_name(self):
         verbose_name = self.choice_1._meta.get_field('choice_text').verbose_name
         self.assertEqual(verbose_name, 'Choice')
@@ -103,64 +122,121 @@ class ChoiceModelTest(TestCase):
         self.poll.delete()
         self.assertEqual(Choice.objects.count(), 0)
 
+    def test_get_percent_returns_correct_values(self):
+        self.assertEqual(self.choice_1.get_percent(), 60)
+        self.assertEqual(self.choice_2.get_percent(), 40)
+        self.assertEqual(self.choice_3.get_percent(), 0)
 
+    def test_increment_votes(self):
+        self.choice_1.increment_votes()
+        self.assertEqual(self.choice_1.votes, 4)
+        self.assertEqual(self.choice_2.votes, 2)
+        self.assertEqual(self.choice_3.votes, 0)
+
+        self.choice_2.increment_votes()
+        self.assertEqual(self.choice_1.votes, 4)
+        self.assertEqual(self.choice_2.votes, 3)
+        self.assertEqual(self.choice_3.votes, 0)
+
+        self.choice_3.increment_votes()
+        self.assertEqual(self.choice_1.votes, 4)
+        self.assertEqual(self.choice_2.votes, 3)
+        self.assertEqual(self.choice_3.votes, 1)
+
+        self.choice_1.increment_votes()
+        self.assertEqual(self.choice_1.votes, 5)
+        self.assertEqual(self.choice_2.votes, 3)
+        self.assertEqual(self.choice_3.votes, 1)
+
+        
 class VoteModelTest(TestCase):
-    def test_model_str(self):
-        user = User.objects.create(
+    def setUp(self):
+        self.user = User.objects.create(
             username="BodegaCat", 
             password="IAmBodegaCat", 
             email="bodegacat@company.com"
         )
 
-        poll = Poll.objects.create(question_text="Who is the GOAT?", author=user)
+        self.poll = Poll.objects.create(question_text="Who is the GOAT?", author=self.user)
 
-        choice_1 = Choice.objects.create(
-            poll=poll,
+        self.choice_1 = Choice.objects.create(
+            poll=self.poll,
             choice_text="Michael Jordan",
             votes=2
         )
 
-        vote = Vote.objects.create(
-            poll=poll,
-            user=user,
-            choice=choice_1
+        self.vote = Vote.objects.create(
+            poll=self.poll,
+            user=self.user,
+            choice=self.choice_1
         )
 
-        self.assertEqual(str(vote), "BodegaCat voted on Poll: Who is the GOAT?")
+    def test_model_str(self):
+        self.assertEqual(str(self.vote), "BodegaCat voted on Poll: Who is the GOAT?")
+
+    def test_deleting_poll_also_deletes_vote(self):
+        self.poll.delete()
+        self.assertEqual(Vote.objects.count(), 0)
+
+    def test_deleting_choice_also_deletes_vote(self):
+        self.choice_1.delete()
+        self.assertEqual(Vote.objects.count(), 0)
+
+    def test_deleting_user_also_deletes_vote(self):
+        self.user.delete()
+        self.assertEqual(Vote.objects.count(), 0)
 
 
 class LikeModelTest(TestCase):
-    def test_model_str(self):
-        user = User.objects.create(
+    def setUp(self):
+        self.user = User.objects.create(
             username="BodegaCat", 
             password="IAmBodegaCat", 
             email="bodegacat@company.com"
         )
 
-        poll = Poll.objects.create(question_text="Who is the GOAT?", author=user)
+        self.poll = Poll.objects.create(question_text="Who is the GOAT?", author=self.user)
 
-        like = Like.objects.create(
-            poll=poll,
-            user=user
+        self.like = Like.objects.create(
+            poll=self.poll,
+            user=self.user
         )
 
-        self.assertEqual(str(like), "BodegaCat liked Poll: Who is the GOAT?")
+    def test_model_str(self):
+        self.assertEqual(str(self.like), "BodegaCat liked Poll: Who is the GOAT?")
+
+    def test_deleting_poll_also_deletes_like(self):
+        self.poll.delete()
+        self.assertEqual(Like.objects.count(), 0)
+
+    def test_deleting_user_also_deletes_like(self):
+        self.user.delete()
+        self.assertEqual(Like.objects.count(), 0)
 
 
 class DislikeModelTest(TestCase):
-    def test_model_str(self):
-        user = User.objects.create(
+    def setUp(self):
+        self.user = User.objects.create(
             username="BodegaCat", 
             password="IAmBodegaCat", 
             email="bodegacat@company.com"
         )
 
-        poll = Poll.objects.create(question_text="Who is the GOAT?", author=user)
+        self.poll = Poll.objects.create(question_text="Who is the GOAT?", author=self.user)
 
-        dislike = Dislike.objects.create(
-            poll=poll,
-            user=user
+        self.dislike = Dislike.objects.create(
+            poll=self.poll,
+            user=self.user
         )
 
-        self.assertEqual(str(dislike), "BodegaCat disliked Poll: Who is the GOAT?")
+    def test_model_str(self):
+        self.assertEqual(str(self.dislike), "BodegaCat disliked Poll: Who is the GOAT?")
+
+    def test_deleting_poll_also_deletes_like(self):
+        self.poll.delete()
+        self.assertEqual(Dislike.objects.count(), 0)
+
+    def test_deleting_user_also_deletes_like(self):
+        self.user.delete()
+        self.assertEqual(Dislike.objects.count(), 0)
 
