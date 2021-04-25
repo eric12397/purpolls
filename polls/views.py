@@ -49,71 +49,81 @@ class PollDislikesAPI(generics.ListAPIView):
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def vote_poll(request, poll_id): 
-	if request.method == 'POST':
+	try:
 		poll = Poll.objects.get(pk=poll_id)
+	except Poll.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+
+	try:
 		user = User.objects.get(pk=request.data['user_id'])
+	except User.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
 
-		if Vote.objects.filter(poll=poll, user=user).exists():
-			return Response({ 'error': "You already voted on this poll!" })
+	if Vote.objects.filter(poll=poll, user=user).exists():
+		return Response({ 'error': "You already voted on this poll!" }, status=status.HTTP_400_BAD_REQUEST)
 
-		else: 
-			selected_choice = Choice.objects.get(pk=request.data['selected_choice_id'])
-			selected_choice.votes += 1
-			selected_choice.save()
-			vote = Vote.objects.create(poll=poll, choice=selected_choice, user=user)
-			poll_serializer = PollAndChoicesSerializer(poll)
-			vote_serializer = VoteSerializer(vote)
-			return Response({
-				'poll': poll_serializer.data,
-				'vote': vote_serializer.data
-			})
-	
+	try:
+		selected_choice = Choice.objects.get(pk=request.data['selected_choice_id'])
+		selected_choice.increment_votes()
+	except Choice.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+
+	vote = Vote.objects.create(poll=poll, choice=selected_choice, user=user)
+	poll_serializer = PollAndChoicesSerializer(poll)
+	vote_serializer = VoteSerializer(vote)
+	return Response({
+		'poll': poll_serializer.data,
+		'vote': vote_serializer.data
+	})
+	 
 		
-@api_view(['PATCH'])
+@api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def like_poll(request, poll_id):
-	user = User.objects.get(pk=request.data['user_id'])
-	poll = Poll.objects.get(pk=poll_id)
+	try:
+		poll = Poll.objects.get(pk=poll_id)
+	except Poll.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+
+	try:
+		user = User.objects.get(pk=request.data['user_id'])
+	except User.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
 
 	if request.data['signal'] == Signal.ADD_LIKE: #enum
 		Like.objects.create(user=user, poll=poll)
-		poll.likes += 1
-		poll.save()
+		poll.increment_likes()
 		msg = "Added like on Poll: " + str(poll.question_text)
 		
 	elif request.data['signal'] == Signal.ADD_LIKE_AND_REMOVE_DISLIKE:
 		Like.objects.create(user=user, poll=poll)
 		Dislike.objects.get(user=user, poll=poll).delete()
-		poll.likes += 1
-		poll.dislikes -= 1
-		poll.save()
+		poll.increment_likes_and_decrement_dislikes()
 		msg = "Added like and removed dislike on Poll: " + str(poll.question_text)
 
 	elif request.data['signal'] == Signal.REMOVE_LIKE:
 		Like.objects.get(user=user, poll=poll).delete()
-		poll.likes -= 1
-		poll.save()
+		poll.decrement_likes()
 		msg = "Removed like on Poll: " + str(poll.question_text)
 
 	elif request.data['signal'] == Signal.ADD_DISLIKE:
 		Dislike.objects.create(user=user, poll=poll)
-		poll.dislikes += 1
-		poll.save()
+		poll.increment_dislikes()
 		msg = "Added dislike on Poll: " + str(poll.question_text)
 
 	elif request.data['signal'] == Signal.ADD_DISLIKE_AND_REMOVE_LIKE:
 		Like.objects.get(user=user, poll=poll).delete()
 		Dislike.objects.create(user=user, poll=poll)
-		poll.likes -= 1
-		poll.dislikes += 1
-		poll.save()
+		poll.increment_dislikes_and_decrement_likes()
 		msg = "Added dislike and removed like on Poll: " + str(poll.question_text)
 
 	elif request.data['signal'] == Signal.REMOVE_DISLIKE:
 		Dislike.objects.get(user=user, poll=poll).delete()
-		poll.dislikes -= 1
-		poll.save()
+		poll.decrement_dislikes()
 		msg = "Removed dislike on Poll: " + str(poll.question_text)
+
+	else:
+		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 	poll_serializer = PollAndChoicesSerializer(poll)
 	return Response({ 

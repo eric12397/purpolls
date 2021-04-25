@@ -94,7 +94,7 @@ export const togglePollLike = pollId => (dispatch, getState) => {
   const pollDisliked = pollsDisliked[pollId]
 
   if (pollLiked === undefined && pollDisliked === undefined) {
-    axiosInstance.patch(`/polls/${pollId}/likes/`, {
+    axiosInstance.post(`/polls/${pollId}/likes/`, {
       signal: ADD_LIKE,
       user_id: userId
     })
@@ -103,7 +103,7 @@ export const togglePollLike = pollId => (dispatch, getState) => {
   }
 
   else if (pollLiked === true && pollDisliked === undefined) {
-    axiosInstance.patch(`/polls/${pollId}/likes/`, {
+    axiosInstance.post(`/polls/${pollId}/likes/`, {
       signal: REMOVE_LIKE,
       user_id: userId
     })
@@ -112,7 +112,7 @@ export const togglePollLike = pollId => (dispatch, getState) => {
   } 
 
   else if (pollLiked === undefined && pollDisliked === true) {
-    axiosInstance.patch(`/polls/${pollId}/likes/`, {
+    axiosInstance.post(`/polls/${pollId}/likes/`, {
       signal: ADD_LIKE_AND_REMOVE_DISLIKE,
       user_id: userId
     })
@@ -129,7 +129,7 @@ export const togglePollDislike = pollId => (dispatch, getState) => {
   const pollDisliked = pollsDisliked[pollId]
 
   if (pollLiked === undefined && pollDisliked === undefined) {
-    axiosInstance.patch(`/polls/${pollId}/likes/`, {
+    axiosInstance.post(`/polls/${pollId}/likes/`, {
       signal: ADD_DISLIKE,
       user_id: userId
     })
@@ -138,7 +138,7 @@ export const togglePollDislike = pollId => (dispatch, getState) => {
   }
 
   else if (pollLiked === undefined && pollDisliked === true) {
-    axiosInstance.patch(`/polls/${pollId}/likes/`, {
+    axiosInstance.post(`/polls/${pollId}/likes/`, {
       signal: REMOVE_DISLIKE,
       user_id: userId
     })
@@ -147,7 +147,7 @@ export const togglePollDislike = pollId => (dispatch, getState) => {
   }
 
   else if (pollLiked === true && pollDisliked === undefined) {
-    axiosInstance.patch(`/polls/${pollId}/likes/`, {
+    axiosInstance.post(`/polls/${pollId}/likes/`, {
       signal: ADD_DISLIKE_AND_REMOVE_LIKE,
       user_id: userId
     })
